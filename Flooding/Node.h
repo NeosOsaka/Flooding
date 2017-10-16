@@ -19,20 +19,23 @@ using namespace std;
 class Node {
 private:
 	int x,y; //(x,y)座標
+	Message *msg; //メッセージ
+	bool state; //メッセージを既に持っているか否か
 	int counter; //送信回数
 	//list<Node> *receivers; //受け取り相手
-	Message *msg; //メッセージ
 	
 public:
-	/* (x,y)の指定 */
+	/* (x,y)座標の指定 */
 	void setXY(int x, int y);
 	
-	/* (x,y)を返す */
+	/* x座標の取得 */
 	int getX();
+	
+	/* y座標の取得 */
 	int getY();
 	
-	/* メッセージの送信 */
-	void sendMessage();
+	/* 送信相手の追加 */
+	void addReceiver(Node *receiver);
 };
 
 #endif /* defined(__Flooding__Node__) */
