@@ -6,8 +6,11 @@
 //  Copyright (c) 2017年 Tatsuro Seno. All rights reserved.
 //
 
+#include <iostream>
+#include <list>
 #include "Node.h"
 
+using namespace std;
 
 /* (x,y)座標の指定 */
 void Node::setXY(int x, int y) {
@@ -25,7 +28,16 @@ int Node::getY() {
 	return y;
 }
 
+/* 送信/受信状態の変更 */
+void Node::changeState() {
+	if (state) {
+		state = false;
+	} else {
+		state = true;
+	}
+}
+
 /* 送信相手の追加 */
-void addReceiver(Node Receiver) {
-	
+void Node::addReceiver(Node receiver) {
+	receivers.push_back(receiver);
 }
