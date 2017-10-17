@@ -28,6 +28,10 @@ int Node::getY() {
 	return y;
 }
 
+/* 状態の取得 */
+bool Node::getState() {
+	return state;
+}
 /* 送信/受信状態の変更 */
 void Node::changeState() {
 	if (state) {

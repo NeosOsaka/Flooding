@@ -12,14 +12,14 @@
 #include <iostream>
 #include <list>
 
+using namespace std;
 
 /* Pub/Subメッセージ用基底クラス */
 class Message {
 private:
-	int i;
-	
+
 public:
-	/* ノードの座標をログに追加 */
+
 };
 
 #endif /* defined(__Flooding__Message__) */

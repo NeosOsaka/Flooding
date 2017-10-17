@@ -34,6 +34,9 @@ public:
 	/* y座標の取得 */
 	int getY();
 	
+	/* 状態の取得 */
+	bool getState();
+	
 	/* 送信/受信状態の変更 */
 	void changeState();
 	
