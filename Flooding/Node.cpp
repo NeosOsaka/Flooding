@@ -32,16 +32,20 @@ int Node::getY() {
 bool Node::getState() {
 	return state;
 }
+
 /* 送信/受信状態の変更 */
 void Node::changeState() {
-	if (state) {
-		state = false;
-	} else {
+	if (!state) {
 		state = true;
 	}
 }
 
-/* 送信相手の追加 */
-void Node::addReceiver(Node receiver) {
-	receivers.push_back(receiver);
+/* 送信回数の増加 */
+void Node::addCount() {
+	send_number++;
+}
+
+/* 送信回数の取得 */
+int Node::getCount() {
+	return send_number;
 }

@@ -20,9 +20,8 @@ class Node {
 private:
 	int x,y; //(x,y)座標
 	Message *msg; //メッセージ
-	bool state = false; //メッセージを既に持っているか否か
-	int counter; //送信回数
-	list<Node> receivers; //受け取り相手
+	bool state = false; //メッセージ受信済/未受信状態
+	int send_number = 0; //送信回数
 	
 public:
 	/* (x,y)座標の指定 */
@@ -40,8 +39,11 @@ public:
 	/* 送信/受信状態の変更 */
 	void changeState();
 	
-	/* 送信相手の追加 */
-	void addReceiver(Node receiver);
+	/* 送信回数の増加 */
+	void addCount();
+	
+	/* 送信回数の取得 */
+	int getCount();
 };
 
 #endif /* defined(__Flooding__Node__) */
