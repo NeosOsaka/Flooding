@@ -9,3 +9,25 @@
 #include <iostream>
 #include <list>
 #include "Message.h"
+
+using namespace std;
+
+/* 経路履歴に追加 */
+void Message::addPath(int node_num) {
+	path.push_back(node_num);
+}
+
+/* 経路履歴を表示 */
+list<int> Message::getPath() {
+	return path;
+}
+
+/* 識別子の設定 */
+void Message::setID(int ID) {
+	this->ID = ID;
+}
+
+/* 識別子の取得 */
+int Message::getID() {
+	return ID;
+}

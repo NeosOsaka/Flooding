@@ -28,6 +28,16 @@ int Node::getY() {
 	return y;
 }
 
+/* ノード番号の指定 */
+void Node::setNodeNum(int node_num) {
+	this->node_num = node_num;
+}
+
+/* ノード番号の取得 */
+int Node::getNodeNum() {
+	return node_num;
+}
+
 /* 状態の取得 */
 bool Node::getState() {
 	return state;
@@ -48,4 +58,38 @@ void Node::addCount() {
 /* 送信回数の取得 */
 int Node::getCount() {
 	return send_number;
+}
+
+/* メッセージの送信 */
+Message Node::sendMessage() {
+	return msg;
+}
+
+/* メッセージの受信 */
+void Node::receiveMessage(Message msg) {
+	/* 受信したメッセージをリストに追加 */
+	this->msg = msg;
+	
+	/* 自身のノード番号を追加 */
+	this->msg.addPath(node_num);
+}
+
+/* メッセージ履歴に追加 */
+void Node::addMsgPath(int node_num) {
+	this->msg.addPath(node_num);
+}
+
+/* メッセージ履歴の取得 */
+list<int> Node::getMsgPath() {
+	return this->msg.getPath();
+}
+
+/* メッセージ識別子の設定 */
+void Node::setMsgID(int ID) {
+	this->msg.setID(ID);
+}
+
+/* メッセージ識別子の取得 */
+int Node::getMsgID() {
+	return this->msg.getID();
 }

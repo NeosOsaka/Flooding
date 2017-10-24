@@ -18,8 +18,9 @@ using namespace std;
 /* ノード用クラス */
 class Node {
 private:
+	int node_num = -1; //ノード番号
 	int x,y; //(x,y)座標
-	Message *msg; //メッセージ
+	Message msg; //メッセージ
 	bool state = false; //メッセージ受信済/未受信状態
 	int send_number = 0; //送信回数
 	
@@ -33,6 +34,12 @@ public:
 	/* y座標の取得 */
 	int getY();
 	
+	/* ノード番号の指定 */
+	void setNodeNum(int node_num);
+
+	/* ノード番号の取得 */
+	int getNodeNum();
+	
 	/* 状態の取得 */
 	bool getState();
 	
@@ -44,6 +51,24 @@ public:
 	
 	/* 送信回数の取得 */
 	int getCount();
+	
+	/* メッセージの送信 */
+	Message sendMessage();
+	
+	/* メッセージの受信 */
+	void receiveMessage(Message msg);
+	
+	/* メッセージ履歴に追加 */
+	void addMsgPath(int node_num);
+	
+	/* メッセージ履歴の取得 */
+	list<int> getMsgPath();
+	
+	/* メッセージ識別子の設定 */
+	void setMsgID(int ID);
+	
+	/* メッセージ識別子の取得 */
+	int getMsgID();
 };
 
 #endif /* defined(__Flooding__Node__) */
