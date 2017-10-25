@@ -38,17 +38,17 @@ int Node::getNodeNum() {
 	return node_num;
 }
 
-/* 状態の取得 */
-bool Node::getState() {
-	return state;
-}
-
-/* 送信/受信状態の変更 */
-void Node::changeState() {
-	if (!state) {
-		state = true;
-	}
-}
+///* 状態の取得 */
+//bool Node::getState() {
+//	return state;
+//}
+//
+///* 送信/受信状態の変更 */
+//void Node::changeState() {
+//	if (!state) {
+//		state = true;
+//	}
+//}
 
 /* 送信回数の取得 */
 int Node::getCount() {
@@ -59,7 +59,9 @@ int Node::getCount() {
 list<Message> Node::sendMessage() {
 	/* 送信回数のカウント */
 	for (Message a : msg) {
+		send_number++;//送信済みのメッセージもまとめてカウントして送ってるからいずれ修正
 	}
+	
 	return msg;
 }
 
@@ -76,6 +78,7 @@ bool Node::receiveMessage(list<Message> msg) {
 			flag = true;
 		}
 	}
+	
 	return flag;
 }
 

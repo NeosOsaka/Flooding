@@ -62,7 +62,6 @@ int main(int argc, const char * argv[]) {
 	a.setID(1);
 	a.setPath(NODENUM-1);
 	node[NODENUM-1].setMessage(a);
-	node[NODENUM-1].changeState();
 	senders_now.push_back(NODENUM-1);
 	
 	
@@ -82,22 +81,35 @@ int main(int argc, const char * argv[]) {
 					int range = abs(node[i].getX() - node[j].getX()) +
 					abs(node[i].getY() - node[j].getY());
 					
-					/***** 受信済みノードには送らない場合 *****/
 					/* ブロードキャスト可能範囲であれば送信 */
-					if ((range != 0) && (range <= LENGTH) && (node[j].getState() == false)) {
+					if ((range != 0) && (range <= LENGTH) /*&& !node[j].getState()*/) {
 						/* ノードの表示 */
 						cout << "	(" << node[i].getX() << "," << node[i].getY();
 						cout << ") -> " << "(" << node[j].getX() << ",";
 						cout << node[j].getY() << ")" << endl;
 						
 						/* メッセージ受け渡し */
-						node[j].receiveMessage(node[i].sendMessage());
+						bool next = node[j].receiveMessage(node[i].sendMessage());
 						
-						/* "未受信"から"受信済み"へ */
-						node[j].changeState();
-						
-						/* 受信ノードを次スロットの送信ノード集合に追加 */
-						senders_next.push_back(j);
+						/* 受信ノードが新規のメッセージを受信したなら次スロットで送信する */
+						if (next) {
+							/* これ1行だと同スロットで複数種類のメッセージを
+							 受け取った時、次スロットで複数回同じメッセを送信する? */
+//							senders_next.push_back(j);
+							
+							/* 次送信リストに含まれていなければ含む */
+							bool flag = true;
+							for (int a : senders_next) {
+								if (a == j) {
+									flag = false;
+									break;
+								}
+							}
+							
+							if (flag) {
+								senders_next.push_back(j);
+							}
+						}
 					}
 
 				}
@@ -127,7 +139,7 @@ int main(int argc, const char * argv[]) {
 				for (Message msg : node[i].getMessage()) {
 					cout << "	";
 					for (int j : msg.getPath()) {
-						cout << j << " -> ";
+						cout << j << " ";
 					}
 				}
 				cout << endl;

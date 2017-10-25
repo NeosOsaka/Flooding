@@ -21,7 +21,6 @@ private:
 	int node_num = -1; //ノード番号
 	int x,y; //(x,y)座標
 	list<Message> msg; //メッセージ
-	bool state = false; //メッセージ受信済/未受信状態
 	int send_number = 0; //送信回数
 	
 public:
@@ -40,11 +39,11 @@ public:
 	/* ノード番号の取得 */
 	int getNodeNum();
 	
-	/* 状態の取得 */
-	bool getState();
-	
-	/* 送信/受信状態の変更 */
-	void changeState();
+//	/* 状態の取得 */
+//	bool getState();
+//	
+//	/* 送信/受信状態の変更 */
+//	void changeState();
 	
 	/* 送信回数の取得 */
 	int getCount();
