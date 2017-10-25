@@ -22,7 +22,7 @@ private:
 
 public:
 	/* 経路履歴に追加 */
-	void addPath(int node_num);
+	void setPath(int node_num);
 	
 	/* 経路履歴の取得 */
 	list<int> getPath();

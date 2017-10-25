@@ -20,7 +20,7 @@ class Node {
 private:
 	int node_num = -1; //ノード番号
 	int x,y; //(x,y)座標
-	Message msg; //メッセージ
+	list<Message> msg; //メッセージ
 	bool state = false; //メッセージ受信済/未受信状態
 	int send_number = 0; //送信回数
 	
@@ -46,29 +46,24 @@ public:
 	/* 送信/受信状態の変更 */
 	void changeState();
 	
-	/* 送信回数の増加 */
-	void addCount();
-	
 	/* 送信回数の取得 */
 	int getCount();
 	
 	/* メッセージの送信 */
-	Message sendMessage();
+	list<Message> sendMessage();
 	
 	/* メッセージの受信 */
-	void receiveMessage(Message msg);
+	bool receiveMessage(list<Message> msg);
 	
-	/* メッセージ履歴に追加 */
-	void addMsgPath(int node_num);
+	/* メッセージの取得 */
+	list<Message> getMessage();
 	
-	/* メッセージ履歴の取得 */
-	list<int> getMsgPath();
+	/* メッセージの設定 */
+	void setMessage(Message msg);
 	
-	/* メッセージ識別子の設定 */
-	void setMsgID(int ID);
+	/* ある識別子のメッセージを持っているか否か */
+	bool hasMessage(int ID);
 	
-	/* メッセージ識別子の取得 */
-	int getMsgID();
 };
 
 #endif /* defined(__Flooding__Node__) */

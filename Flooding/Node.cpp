@@ -50,46 +50,53 @@ void Node::changeState() {
 	}
 }
 
-/* 送信回数の増加 */
-void Node::addCount() {
-	send_number++;
-}
-
 /* 送信回数の取得 */
 int Node::getCount() {
 	return send_number;
 }
 
 /* メッセージの送信 */
-Message Node::sendMessage() {
+list<Message> Node::sendMessage() {
+	/* 送信回数のカウント */
+	for (Message a : msg) {
+	}
 	return msg;
 }
 
 /* メッセージの受信 */
-void Node::receiveMessage(Message msg) {
-	/* 受信したメッセージをリストに追加 */
-	this->msg = msg;
+bool Node::receiveMessage(list<Message> msg) {
+	bool flag = false;
 	
-	/* 自身のノード番号を追加 */
-	this->msg.addPath(node_num);
+	/* 受信したメッセージをリストに追加 */
+	for (Message rcv : msg) {
+		/* 重複していないメッセージなら追加 */
+		if (!hasMessage(rcv.getID())) {
+			rcv.setPath(node_num);
+			this->msg.push_back(rcv);
+			flag = true;
+		}
+	}
+	return flag;
 }
 
-/* メッセージ履歴に追加 */
-void Node::addMsgPath(int node_num) {
-	this->msg.addPath(node_num);
+/* メッセージの設定 */
+void Node::setMessage(Message msg) {
+	this->msg.clear();
+	this->msg.push_back(msg);
 }
 
-/* メッセージ履歴の取得 */
-list<int> Node::getMsgPath() {
-	return this->msg.getPath();
+/* メッセージの取得 */
+list<Message> Node::getMessage() {
+	return msg;
 }
 
-/* メッセージ識別子の設定 */
-void Node::setMsgID(int ID) {
-	this->msg.setID(ID);
-}
-
-/* メッセージ識別子の取得 */
-int Node::getMsgID() {
-	return this->msg.getID();
+/* ある識別子のメッセージを持っているか否か */
+bool Node::hasMessage(int ID) {
+	for (Message a : msg) {
+		if (a.getID() == ID) {
+			return true;
+		}
+	}
+	
+	return false;
 }

@@ -32,34 +32,37 @@ int main(int argc, const char * argv[]) {
 	node[3].Node::setXY(4, 1);
 	node[4].Node::setXY(4, 4);
 	
-//	node[0].Node::setXY(0, 2);
-//	node[1].Node::setXY(0, 5);
-//	node[2].Node::setXY(1, 0);
-//	node[3].Node::setXY(1, 3);
-//	node[4].Node::setXY(1, 8);
-//	node[5].Node::setXY(2, 5);
-//	node[6].Node::setXY(3, 1);
-//	node[7].Node::setXY(3, 9);
-//	node[8].Node::setXY(4, 4);
-//	node[9].Node::setXY(4, 7);
-//	node[10].Node::setXY(5, 0);
-//	node[11].Node::setXY(5, 6);
-//	node[12].Node::setXY(6, 2);
-//	node[13].Node::setXY(6, 9);
-//	node[14].Node::setXY(7, 8);
-//	node[15].Node::setXY(8, 0);
-//	node[16].Node::setXY(8, 4);
-//	node[17].Node::setXY(8, 6);
-//	node[18].Node::setXY(9, 2);
-//	node[19].Node::setXY(9, 8);
+	//	node[0].Node::setXY(0, 2);
+	//	node[1].Node::setXY(0, 5);
+	//	node[2].Node::setXY(1, 0);
+	//	node[3].Node::setXY(1, 3);
+	//	node[4].Node::setXY(1, 8);
+	//	node[5].Node::setXY(2, 5);
+	//	node[6].Node::setXY(3, 1);
+	//	node[7].Node::setXY(3, 9);
+	//	node[8].Node::setXY(4, 4);
+	//	node[9].Node::setXY(4, 7);
+	//	node[10].Node::setXY(5, 0);
+	//	node[11].Node::setXY(5, 6);
+	//	node[12].Node::setXY(6, 2);
+	//	node[13].Node::setXY(6, 9);
+	//	node[14].Node::setXY(7, 8);
+	//	node[15].Node::setXY(8, 0);
+	//	node[16].Node::setXY(8, 4);
+	//	node[17].Node::setXY(8, 6);
+	//	node[18].Node::setXY(9, 2);
+	//	node[19].Node::setXY(9, 8);
 	
 	for (int i = 0; i < NODENUM; i++) {
 		node[i].Node::setNodeNum(i);
 	}
 	
 	/* 送信元を1つ指定 */
+	Message a;
+	a.setID(1);
+	a.setPath(NODENUM-1);
+	node[NODENUM-1].setMessage(a);
 	node[NODENUM-1].changeState();
-	node[NODENUM-1].addMsgPath(NODENUM-1);
 	senders_now.push_back(NODENUM-1);
 	
 	
@@ -77,7 +80,7 @@ int main(int argc, const char * argv[]) {
 				for (int j = 0; j < NODENUM; j++) {
 					/* ノード間の距離計算(△x+△y) */
 					int range = abs(node[i].getX() - node[j].getX()) +
-								abs(node[i].getY() - node[j].getY());
+					abs(node[i].getY() - node[j].getY());
 					
 					/***** 受信済みノードには送らない場合 *****/
 					/* ブロードキャスト可能範囲であれば送信 */
@@ -90,38 +93,13 @@ int main(int argc, const char * argv[]) {
 						/* メッセージ受け渡し */
 						node[j].receiveMessage(node[i].sendMessage());
 						
-						/* 送信回数の増加 */
-						node[i].addCount();
-						
 						/* "未受信"から"受信済み"へ */
 						node[j].changeState();
 						
 						/* 受信ノードを次スロットの送信ノード集合に追加 */
 						senders_next.push_back(j);
 					}
-					
-//					/***** 受信済みノードにも送る場合 *****/
-//					/* ブロードキャスト可能範囲であれば送信 */
-//					if ((range != 0) && (range <= LENGTH)) {
-//						/* ノードの表示 */
-//						cout << "	(" << node[i].getX() << "," << node[i].getY();
-//						cout << ") -> " << "(" << node[j].getX() << ",";
-//						cout << node[j].getY() << ")" << endl;
-//						
-//						/* メッセージ受け渡し */
-//						node[j].receiveMessage(node[i].sendMessage());
-//
-//						/* 送信回数の増加 */
-//						node[i].addCount();
-//						
-//						/* 受信ノードを次スロットの送信ノード集合に追加 */
-//						if (node[j].getState() == false) {
-//							senders_next.push_back(j);
-//						}
-//						
-//						/* "未受信"から"受信済み"へ */
-//						node[j].changeState();
-//					}
+
 				}
 			}
 			
@@ -145,9 +123,12 @@ int main(int argc, const char * argv[]) {
 			/* 各メッセージの経路履歴の出力 */
 			cout << "----- Message Route -----" << endl;
 			for (int i = 0; i < NODENUM; i++) {
-				cout << "Node[" << i << "] : ";
-				for (int point : node[i].getMsgPath()) {
-					cout << point << " -> ";
+				cout << "Node[" << i << "] : " << endl;
+				for (Message msg : node[i].getMessage()) {
+					cout << "	";
+					for (int j : msg.getPath()) {
+						cout << j << " -> ";
+					}
 				}
 				cout << endl;
 			}

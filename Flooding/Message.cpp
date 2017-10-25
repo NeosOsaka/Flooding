@@ -13,7 +13,7 @@
 using namespace std;
 
 /* 経路履歴に追加 */
-void Message::addPath(int node_num) {
+void Message::setPath(int node_num) {
 	path.push_back(node_num);
 }
 
