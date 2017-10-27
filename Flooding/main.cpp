@@ -15,8 +15,9 @@ using namespace std;
 
 
 int main(int argc, const char * argv[]) {
-	const static int NODENUM = 5; //ノード数
-	const static int LENGTH = 3; //ブロードキャスト可能範囲
+	const static int SIDE = 256; //マップの一辺
+	const static int NODENUM = (SIDE/2 + 1)*(SIDE/2 + 1); //ノード数
+	const static int RADIUS = 3; //送信可能範囲の半径
 	Node node[NODENUM]; //ノード
 	int total = 0; //全ノードの総送信回数
 	list<int> senders_now; //現スロットで送信を行うノード集合
@@ -24,37 +25,19 @@ int main(int argc, const char * argv[]) {
 	senders_now.clear();
 	senders_next.clear();
 	
+	
 	/********** 初期設定 **********/
 	/* 各ノードを配置 */
-	node[0].Node::setXY(0, 1);
-	node[1].Node::setXY(2, 0);
-	node[2].Node::setXY(2, 3);
-	node[3].Node::setXY(4, 1);
-	node[4].Node::setXY(4, 4);
-	
-	//	node[0].Node::setXY(0, 2);
-	//	node[1].Node::setXY(0, 5);
-	//	node[2].Node::setXY(1, 0);
-	//	node[3].Node::setXY(1, 3);
-	//	node[4].Node::setXY(1, 8);
-	//	node[5].Node::setXY(2, 5);
-	//	node[6].Node::setXY(3, 1);
-	//	node[7].Node::setXY(3, 9);
-	//	node[8].Node::setXY(4, 4);
-	//	node[9].Node::setXY(4, 7);
-	//	node[10].Node::setXY(5, 0);
-	//	node[11].Node::setXY(5, 6);
-	//	node[12].Node::setXY(6, 2);
-	//	node[13].Node::setXY(6, 9);
-	//	node[14].Node::setXY(7, 8);
-	//	node[15].Node::setXY(8, 0);
-	//	node[16].Node::setXY(8, 4);
-	//	node[17].Node::setXY(8, 6);
-	//	node[18].Node::setXY(9, 2);
-	//	node[19].Node::setXY(9, 8);
+	int num = 0;
+	for (int x = 0; x <= SIDE; x+=2) {
+		for (int y = 0; y <= SIDE; y+=2) {
+			node[num].setXY(x,y);
+			num++;
+		}
+	}
 	
 	for (int i = 0; i < NODENUM; i++) {
-		node[i].Node::setNodeNum(i);
+		node[i].setNodeNum(i);
 	}
 	
 	/* 送信元を1つ指定 */
@@ -78,26 +61,20 @@ int main(int argc, const char * argv[]) {
 				/* 送信相手を探す */
 				for (int j = 0; j < NODENUM; j++) {
 					/* ノード間の距離計算(△x+△y) */
-					int range = abs(node[i].getX() - node[j].getX()) +
-					abs(node[i].getY() - node[j].getY());
+					int x = abs(node[i].getX() - node[j].getX());
+					int y = abs(node[i].getY() - node[j].getY());
+					int range = x*x + y*y;
 					
 					/* ブロードキャスト可能範囲であれば送信 */
-					if ((range != 0) && (range <= LENGTH) /*&& !node[j].getState()*/) {
-						/* ノードの表示 */
-						cout << "	(" << node[i].getX() << "," << node[i].getY();
-						cout << ") -> " << "(" << node[j].getX() << ",";
-						cout << node[j].getY() << ")" << endl;
-						
+					if ((range != 0) && (range <= RADIUS*RADIUS)) {
+						/* 送受信ノードの表示 */
+						cout << "	" << i << " -> " << "" << j << "" << endl;
+
 						/* メッセージ受け渡し */
 						bool next = node[j].receiveMessage(node[i].sendMessage());
 						
 						/* 受信ノードが新規のメッセージを受信したなら次スロットで送信する */
 						if (next) {
-							/* これ1行だと同スロットで複数種類のメッセージを
-							 受け取った時、次スロットで複数回同じメッセを送信する? */
-//							senders_next.push_back(j);
-							
-							/* 次送信リストに含まれていなければ含む */
 							bool flag = true;
 							for (int a : senders_next) {
 								if (a == j) {
@@ -106,6 +83,7 @@ int main(int argc, const char * argv[]) {
 								}
 							}
 							
+							/* 次スロット送信リストにまだ含まれていなければ含む */
 							if (flag) {
 								senders_next.push_back(j);
 							}
@@ -118,32 +96,33 @@ int main(int argc, const char * argv[]) {
 			senders_now.clear();
 			senders_now = senders_next;
 			senders_next.clear();
+			senders_now.sort();
 		}
 		
 		/* 送信ノードが無ければFlooding終了 */
 		else {
-			cout << endl;
-			
-			/* 送信回数の出力 */
-			for (Node a : node) {
-				total += a.getCount();
-			}
-			cout << "----- Transmission Times -----" << endl;
-			cout << total << endl;
-			cout << endl;
-			
 			/* 各メッセージの経路履歴の出力 */
+			cout << endl;
 			cout << "----- Message Route -----" << endl;
 			for (int i = 0; i < NODENUM; i++) {
 				cout << "Node[" << i << "] : " << endl;
 				for (Message msg : node[i].getMessage()) {
-					cout << "	";
+					cout << "	" << "Msg[" << msg.getID() << "] : ";
 					for (int j : msg.getPath()) {
 						cout << j << " ";
 					}
 				}
 				cout << endl;
 			}
+
+			/* 送信回数の出力 */
+			cout << endl;
+			for (Node a : node) {
+				total += a.getCount();
+			}
+			cout << "----- Transmission Times -----" << endl;
+			cout << total << endl;
+			cout << endl;
 			
 			break;
 		}

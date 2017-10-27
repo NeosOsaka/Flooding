@@ -39,12 +39,6 @@ public:
 	/* ノード番号の取得 */
 	int getNodeNum();
 	
-//	/* 状態の取得 */
-//	bool getState();
-//	
-//	/* 送信/受信状態の変更 */
-//	void changeState();
-	
 	/* 送信回数の取得 */
 	int getCount();
 	
