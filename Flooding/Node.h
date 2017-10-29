@@ -54,6 +54,9 @@ public:
 	/* メッセージの設定 */
 	void setMessage(Message msg);
 	
+	/* メッセージを一通以上持っているか否か */
+	bool hasMessage();
+	
 	/* ある識別子のメッセージを持っているか否か */
 	bool hasMessage(int ID);
 	

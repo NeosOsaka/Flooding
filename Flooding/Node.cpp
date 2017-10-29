@@ -82,6 +82,11 @@ list<Message> Node::getMessage() {
 	return msg;
 }
 
+/* メッセージを一通以上持っているか否か */
+bool Node::hasMessage() {
+	return !msg.empty();
+}
+
 /* ある識別子のメッセージを持っているか否か */
 bool Node::hasMessage(int ID) {
 	for (Message a : msg) {

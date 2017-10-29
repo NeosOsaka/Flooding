@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <list>
+#include <fstream>
+#include <string>
 #include "Message.h"
 #include "Node.h"
 
@@ -15,8 +17,9 @@ using namespace std;
 
 
 int main(int argc, const char * argv[]) {
-	const static int SIDE = 256; //マップの一辺
-	const static int NODENUM = (SIDE/2 + 1)*(SIDE/2 + 1); //ノード数
+//	const static int SIDE = 90; //マップの一辺
+//	const static int NODENUM = (SIDE/2 + 1)*(SIDE/2 + 1); //ノード数
+	const static int NODENUM = 30;
 	const static int RADIUS = 3; //送信可能範囲の半径
 	Node node[NODENUM]; //ノード
 	int total = 0; //全ノードの総送信回数
@@ -28,13 +31,44 @@ int main(int argc, const char * argv[]) {
 	
 	/********** 初期設定 **********/
 	/* 各ノードを配置 */
-	int num = 0;
-	for (int x = 0; x <= SIDE; x+=2) {
-		for (int y = 0; y <= SIDE; y+=2) {
-			node[num].setXY(x,y);
-			num++;
-		}
-	}
+//	int num = 0;
+//	for (int x = 0; x <= SIDE; x+=2) {
+//		for (int y = 0; y <= SIDE; y+=2) {
+//			node[num].setXY(x,y);
+//			num++;
+//		}
+//	}
+
+	node[0].setXY(0, 9);
+	node[1].setXY(1, 0);
+	node[2].setXY(1, 1);
+	node[3].setXY(1, 5);
+	node[4].setXY(1, 6);
+	node[5].setXY(2, 3);
+	node[6].setXY(2, 4);
+	node[7].setXY(2, 8);
+	node[8].setXY(2, 9);
+	node[9].setXY(3, 5);
+	node[10].setXY(3, 9);
+	node[11].setXY(4, 2);
+	node[12].setXY(4, 4);
+	node[13].setXY(4, 5);
+	node[14].setXY(4, 7);
+	node[15].setXY(4, 8);
+	node[16].setXY(5, 0);
+	node[17].setXY(5, 1);
+	node[18].setXY(5, 6);
+	node[19].setXY(5, 9);
+	node[20].setXY(6, 1);
+	node[21].setXY(6, 2);
+	node[22].setXY(6, 7);
+	node[23].setXY(7, 3);
+	node[24].setXY(7, 7);
+	node[25].setXY(7, 9);
+	node[26].setXY(8, 2);
+	node[27].setXY(8, 4);
+	node[28].setXY(9, 5);
+	node[29].setXY(9, 7);
 	
 	for (int i = 0; i < NODENUM; i++) {
 		node[i].setNodeNum(i);
@@ -124,6 +158,16 @@ int main(int argc, const char * argv[]) {
 			cout << total << endl;
 			cout << endl;
 			
+			/* 未受信ノードのノード番号出力 */
+			cout << "----- Not Received Nodes -----" << endl;
+			for (Node a : node) {
+				if (!a.hasMessage()) {
+					cout << "Node[" << a.getNodeNum() << "]";
+					cout << endl;
+				}
+			}
+			cout << endl;
+
 			break;
 		}
 	}
