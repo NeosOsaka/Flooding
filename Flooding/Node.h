@@ -20,7 +20,7 @@ class Node {
 private:
 	int node_num = -1; //ノード番号
 	int x,y; //(x,y)座標
-	list<Message*> msg; //メッセージ
+	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
 	
 public:
@@ -35,7 +35,7 @@ public:
 	
 	/* ノード番号の指定 */
 	void setNodeNum(int node_num);
-
+	
 	/* ノード番号の取得 */
 	int getNodeNum();
 	
@@ -43,16 +43,16 @@ public:
 	int getCount();
 	
 	/* メッセージの送信 */
-	list<Message*> sendMessage();
+	list<Message> sendMessage();
 	
 	/* メッセージの受信 */
-	bool receiveMessage(list<Message*> msg);
+	bool receiveMessage(list<Message> msg);
 	
 	/* メッセージの取得 */
-	list<Message*> getMessage();
+	list<Message> getMessage();
 	
 	/* メッセージの設定 */
-	void setMessage(Message* msg);
+	void setMessage(Message msg);
 	
 	/* メッセージを一通以上持っているか否か */
 	bool hasMessage();

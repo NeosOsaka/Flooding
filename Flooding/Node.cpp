@@ -44,9 +44,9 @@ int Node::getCount() {
 }
 
 /* メッセージの送信 */
-list<Message*> Node::sendMessage() {
+list<Message> Node::sendMessage() {
 	/* 送信回数のカウント */
-	for (Message* a : msg) {
+	for (Message a : msg) {
 		//送信済みのメッセージもまとめてカウントして送ってるからいずれ修正
 		send_number++;
 	}
@@ -55,15 +55,14 @@ list<Message*> Node::sendMessage() {
 }
 
 /* メッセージの受信 */
-bool Node::receiveMessage(list<Message*> msg) {
+bool Node::receiveMessage(list<Message> msg) {
 	bool flag = false;
 	
 	/* 受信したメッセージをリストに追加 */
-	for (Message* rcv : msg) {
+	for (Message rcv : msg) {
 		/* 重複していないメッセージなら追加 */
-		if (!hasMessage(rcv->getID())) {
-			
-			rcv->setPath(node_num);
+		if (!hasMessage(rcv.getID())) {
+			rcv.setPath(node_num);
 			this->msg.push_back(rcv);
 			flag = true;
 		}
@@ -73,13 +72,13 @@ bool Node::receiveMessage(list<Message*> msg) {
 }
 
 /* メッセージの設定 */
-void Node::setMessage(Message* msg) {
+void Node::setMessage(Message msg) {
 	this->msg.clear();
 	this->msg.push_back(msg);
 }
 
 /* メッセージの取得 */
-list<Message*> Node::getMessage() {
+list<Message> Node::getMessage() {
 	return msg;
 }
 
@@ -90,8 +89,8 @@ bool Node::hasMessage() {
 
 /* ある識別子のメッセージを持っているか否か */
 bool Node::hasMessage(int ID) {
-	for (Message* a : msg) {
-		if (a->getID() == ID) {
+	for (Message a : msg) {
+		if (a.getID() == ID) {
 			return true;
 		}
 	}

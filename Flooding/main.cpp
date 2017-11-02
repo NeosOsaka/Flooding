@@ -17,11 +17,11 @@ using namespace std;
 
 const static int SIDE = 1024; //マップの一辺
 const static int NODENUM = (SIDE/2 + 1)*(SIDE/2 + 1); //ノード数
-const static int RADIUS = 3; //送信可能範囲の半径
 Node node[NODENUM]; //ノード
 
 int main(int argc, const char * argv[]) {
 //	const static int NODENUM = 30;
+	const static int RADIUS = 3; //送信可能範囲の半径
 	int total = 0; //全ノードの総送信回数
 	list<int> senders_now; //現スロットで送信を行うノード集合
 	list<int> senders_next; //次スロットで送信を行うノード集合
@@ -31,14 +31,14 @@ int main(int argc, const char * argv[]) {
 	
 	/********** 初期設定 **********/
 	/* 各ノードを配置 */
-	int num = 0;
-	for (int x = 0; x <= SIDE; x+=2) {
-		for (int y = 0; y <= SIDE; y+=2) {
-			node[num].setXY(x,y);
-			num++;
+		int num = 0;
+		for (int x = 0; x <= SIDE; x+=2) {
+			for (int y = 0; y <= SIDE; y+=2) {
+				node[num].setXY(x,y);
+				num++;
+			}
 		}
-	}
-
+	
 //	node[0].setXY(0, 9);
 //	node[1].setXY(1, 0);
 //	node[2].setXY(1, 1);
@@ -78,7 +78,7 @@ int main(int argc, const char * argv[]) {
 	Message a;
 	a.setID(1);
 	a.setPath(NODENUM-1);
-	node[NODENUM-1].setMessage(&a);
+	node[NODENUM-1].setMessage(a);
 	senders_now.push_back(NODENUM-1);
 	
 	
@@ -103,7 +103,7 @@ int main(int argc, const char * argv[]) {
 					if ((range != 0) && (range <= RADIUS*RADIUS)) {
 						/* 送受信ノードの表示 */
 						cout << "	" << i << " -> " << "" << j << "" << endl;
-
+						
 						/* メッセージ受け渡し */
 						bool next = node[j].receiveMessage(node[i].sendMessage());
 						
@@ -123,7 +123,7 @@ int main(int argc, const char * argv[]) {
 							}
 						}
 					}
-
+					
 				}
 			}
 			
@@ -136,19 +136,19 @@ int main(int argc, const char * argv[]) {
 		/* 送信ノードが無ければFlooding終了 */
 		else {
 			/* 各メッセージの経路履歴の出力 */
-//			cout << endl;
-//			cout << "----- Message Route -----" << endl;
-//			for (int i = 0; i < NODENUM; i++) {
-//				cout << "Node[" << i << "] : " << endl;
-//				for (Message* msg : node[i].getMessage()) {
-//					cout << "	" << "Msg[" << msg->getID() << "] : ";
-//					for (int j : msg->getPath()) {
-//						cout << j << " ";
-//					}
-//				}
-//				cout << endl;
-//			}
-
+			cout << endl;
+			cout << "----- Message Route -----" << endl;
+			for (int i = 0; i < NODENUM; i++) {
+				cout << "Node[" << i << "] : " << endl;
+				for (Message msg : node[i].getMessage()) {
+					cout << "	" << "Msg[" << msg.getID() << "] : ";
+					for (int j : msg.getPath()) {
+						cout << j << " ";
+					}
+				}
+				cout << endl;
+			}
+			
 			/* 送信回数の出力 */
 			cout << endl;
 			for (Node a : node) {
@@ -167,7 +167,7 @@ int main(int argc, const char * argv[]) {
 				}
 			}
 			cout << endl;
-
+			
 			break;
 		}
 	}
