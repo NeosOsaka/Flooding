@@ -97,3 +97,34 @@ bool Node::hasMessage(int ID) {
 	
 	return false;
 }
+
+/* (x,y)座標からZ記法座標を得る */
+void Node::setZ(int side) {
+	int x = this->x;
+	int y = this->y;
+	int center = side;
+	
+	/* 0~3のどの領域にいるか判定しつつ、辺を半分にし続ける */
+	while (center > 1) {
+		center /= 2;
+		
+		if (y < center) {
+			if (x < center) {
+				z_id.push_back(0);
+			} else {
+				z_id.push_back(1);
+				x -= center;
+			}
+		} else {
+			if (x < center) {
+				z_id.push_back(2);
+				y -= center;
+			} else {
+				z_id.push_back(3);
+				x -= center;
+				y -= center;
+			}
+		}
+	}
+	
+}

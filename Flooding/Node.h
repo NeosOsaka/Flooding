@@ -11,7 +11,9 @@
 
 #include <iostream>
 #include <list>
+#include <unordered_map>
 #include "Message.h"
+#include "RoutingTable.h"
 
 using namespace std;
 
@@ -20,8 +22,11 @@ class Node {
 private:
 	int node_num = -1; //ノード番号
 	int x,y; //(x,y)座標
+	list<int> z_id; //Z記法ID
 	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
+	unordered_map<list<int>, int> ls; //近隣ノード集合
+	RoutingTable rs; //経路表
 	
 public:
 	/* (x,y)座標の指定 */
@@ -59,6 +64,9 @@ public:
 	
 	/* ある識別子のメッセージを持っているか否か */
 	bool hasMessage(int ID);
+	
+	/* (x,y)座標からZ記法座標を得る */
+	void setZ(int side);
 	
 };
 

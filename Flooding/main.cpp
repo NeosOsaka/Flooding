@@ -12,15 +12,15 @@
 #include <string>
 #include "Message.h"
 #include "Node.h"
+#include "RoutingTable.h"
 
 using namespace std;
 
-const static int SIDE = 1024; //マップの一辺
-const static int NODENUM = (SIDE/2 + 1)*(SIDE/2 + 1); //ノード数
+const static int SIDE = 8;
+const static int NODENUM = 5;
 Node node[NODENUM]; //ノード
 
 int main(int argc, const char * argv[]) {
-//	const static int NODENUM = 30;
 	const static int RADIUS = 3; //送信可能範囲の半径
 	int total = 0; //全ノードの総送信回数
 	list<int> senders_now; //現スロットで送信を行うノード集合
@@ -31,47 +31,16 @@ int main(int argc, const char * argv[]) {
 	
 	/********** 初期設定 **********/
 	/* 各ノードを配置 */
-		int num = 0;
-		for (int x = 0; x <= SIDE; x+=2) {
-			for (int y = 0; y <= SIDE; y+=2) {
-				node[num].setXY(x,y);
-				num++;
-			}
-		}
+	node[0].setXY(0, 0);
+	node[1].setXY(2, 1);
+	node[2].setXY(3, 3);
+	node[3].setXY(5, 4);
+	node[4].setXY(6, 6);
 	
-//	node[0].setXY(0, 9);
-//	node[1].setXY(1, 0);
-//	node[2].setXY(1, 1);
-//	node[3].setXY(1, 5);
-//	node[4].setXY(1, 6);
-//	node[5].setXY(2, 3);
-//	node[6].setXY(2, 4);
-//	node[7].setXY(2, 8);
-//	node[8].setXY(2, 9);
-//	node[9].setXY(3, 5);
-//	node[10].setXY(3, 9);
-//	node[11].setXY(4, 2);
-//	node[12].setXY(4, 4);
-//	node[13].setXY(4, 5);
-//	node[14].setXY(4, 7);
-//	node[15].setXY(4, 8);
-//	node[16].setXY(5, 0);
-//	node[17].setXY(5, 1);
-//	node[18].setXY(5, 6);
-//	node[19].setXY(5, 9);
-//	node[20].setXY(6, 1);
-//	node[21].setXY(6, 2);
-//	node[22].setXY(6, 7);
-//	node[23].setXY(7, 3);
-//	node[24].setXY(7, 7);
-//	node[25].setXY(7, 9);
-//	node[26].setXY(8, 2);
-//	node[27].setXY(8, 4);
-//	node[28].setXY(9, 5);
-//	node[29].setXY(9, 7);
-	
+	/* ノード番号とZ記法座標を付与 */
 	for (int i = 0; i < NODENUM; i++) {
 		node[i].setNodeNum(i);
+		node[i].setZ(SIDE);
 	}
 	
 	/* 送信元を1つ指定 */
@@ -82,7 +51,27 @@ int main(int argc, const char * argv[]) {
 	senders_now.push_back(NODENUM-1);
 	
 	
-	/********** Flooding開始 **********/
+	
+	/********** Rooting開始 **********/
+	/* 近隣ノードの把握, LeafSetとRoutingTableの作成 */
+	for (int i = 0; i < NODENUM; i++) {
+		for (int j = 0; j < NODENUM; j++) {
+			/* ノード間の距離計算(△x+△y) */
+			int x = abs(node[i].getX() - node[j].getX());
+			int y = abs(node[i].getY() - node[j].getY());
+			int range = x*x + y*y;
+			
+			/* ブロードキャスト可能範囲であれば送信 */
+			if ((range != 0) && (range <= RADIUS*RADIUS)) {
+				/* 近隣ノード同士の表示 */
+				cout << "	" << i << " -> " << "" << j << "" << endl;
+			}
+		}
+	}
+	
+	
+	
+	/********** Forwarding開始 **********/
 	cout << "----- Time Slot -----" << endl;
 	
 	for (int timeslot = 1; ; timeslot++) {
