@@ -6,6 +6,8 @@
 //  Copyright (c) 2017年 Tatsuro Seno. All rights reserved.
 //
 
+#include <iostream>
+#include <vector>
 #include "LeafSet.h"
 
 /* Z記法座標の設定 */
@@ -19,12 +21,12 @@ int LeafSet::getNodeNum() {
 }
 
 /* Z記法座標の設定 */
-void LeafSet::setZID(list<int> z_id) {
+void LeafSet::setZID(vector<int> z_id) {
 	this->z_id.clear();
 	this->z_id = z_id;
 }
 
 /* Z記法座標の取得 */
-list<int> LeafSet::getZID() {
+vector<int> LeafSet::getZID() {
 	return this->z_id;
 }

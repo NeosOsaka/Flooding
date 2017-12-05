@@ -10,7 +10,7 @@
 #define __Flooding__LeafSet__
 
 #include <iostream>
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -19,7 +19,7 @@ private:
 
 public:
 	int nodenum; //ノード番号
-	list<int> z_id; //Z記法座標
+	vector<int> z_id; //Z記法座標
 	int x,y; //(x,y)座標
 	
 	/* Z記法座標の設定 */
@@ -29,10 +29,10 @@ public:
 	int getNodeNum();
 	
 	/* Z記法座標の設定 */
-	void setZID(list<int> z_id);
+	void setZID(vector<int> z_id);
 	
 	/* Z記法座標の取得 */
-	list<int> getZID();
+	vector<int> getZID();
 	
 
 };

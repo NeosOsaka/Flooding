@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include "Node.h"
 
 using namespace std;
@@ -104,6 +105,6 @@ void Node::setZ(int num) {
 }
 
 /* Z記法座標の取得 */
-list<int> Node::getZ() {
+vector<int> Node::getZ() {
 	return z_id;
 }

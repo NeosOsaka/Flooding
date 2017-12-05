@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include "Message.h"
 #include "LeafSet.h"
 #include "RoutingTable.h"
@@ -21,7 +22,7 @@ using namespace std;
 class Node {
 private:
 	int x,y; //(x,y)座標
-	list<int> z_id; //Z記法座標
+	vector<int> z_id; //Z記法座標
 	int node_num = -1; //ノード番号
 	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
@@ -70,7 +71,7 @@ public:
 	void setZ(int num);
 	
 	/* Z記法座標の取得 */
-	list<int> getZ();
+	vector<int> getZ();
 };
 
 #endif /* defined(__Flooding__Node__) */

@@ -8,10 +8,12 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include <fstream>
 #include <string>
 #include "Message.h"
 #include "Node.h"
+
 
 using namespace std;
 
@@ -80,27 +82,27 @@ int main(int argc, const char * argv[]) {
 			side = side / 2;
 		}
 	}
-	
-	/* Leaf Setの設定 */
-	for (int i = 0; i < NODENUM; i++) {
-		for (int j = 0; j < NODENUM; j++) {
-			/* ノード間の距離計算(△x+△y) */
-			int x = abs(node[i].getX() - node[j].getX());
-			int y = abs(node[i].getY() - node[j].getY());
-			int range = x*x + y*y;
-			
-			/* ブロードキャスト可能範囲であればLSに追加 */
-			if ((range != 0) && (range <= RADIUS*RADIUS)) {
-				
-			}
-			
-		}
-	}
-	
-	/* Routing Tableの設定 */
-	for (int i = 0; i < NODENUM; i++) {
-	}
-	
+
+//	/* Leaf Setの設定 */
+//	for (int i = 0; i < NODENUM; i++) {
+//		for (int j = 0; j < NODENUM; j++) {
+//			/* ノード間の距離計算(△x+△y) */
+//			int x = abs(node[i].getX() - node[j].getX());
+//			int y = abs(node[i].getY() - node[j].getY());
+//			int range = x*x + y*y;
+//			
+//			/* ブロードキャスト可能範囲であればLSに追加 */
+//			if ((range != 0) && (range <= RADIUS*RADIUS)) {
+//				
+//			}
+//			
+//		}
+//	}
+//	
+//	/* Routing Tableの設定 */
+//	for (int i = 0; i < NODENUM; i++) {
+//	}
+//	
 	
 	
 	
