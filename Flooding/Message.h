@@ -19,7 +19,7 @@ class Message {
 private:
 	list<int> path; //経路中に辿ったノード
 	int ID; //識別子
-
+	
 public:
 	/* 経路履歴に追加 */
 	void setPath(int node_num);

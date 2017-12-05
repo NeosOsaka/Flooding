@@ -10,21 +10,24 @@
 #define __Flooding__RoutingTable__
 
 #include <iostream>
-#include <vector>
+#include <list>
+#include <unordered_map>
 
 using namespace std;
 
 /* Pastry方式のルーティングテーブル用クラス */
 class RoutingTable {
 private:
-	/* 経路表(Key:zID,Value:NextHop) */
-	vector<vector<int>> rt;
-	
+	//vectorにしよう 添字アクセス出来る
+	unordered_map<list<int>, int> table; //Key:Z記法座標, Value:NextHop
 	
 public:
-	/* 初期化(サイズの決定) */
-	/* 値を付与する */
-	void addValue();
+	/* RTの初期設定 */
+	void setUp(list<int> z_id);
+	
+	/* NextHopの追加 */
+	void addNextHop(list<int> z_id, int nodenum);
+	
 };
 
 #endif /* defined(__Flooding__RoutingTable__) */

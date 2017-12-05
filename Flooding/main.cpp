@@ -12,12 +12,11 @@
 #include <string>
 #include "Message.h"
 #include "Node.h"
-#include "RoutingTable.h"
 
 using namespace std;
 
-const static int SIDE = 8;
-const static int NODENUM = 5;
+const static int SIDE = 8; //マップの一辺
+const static int NODENUM = 5; //ノード数
 Node node[NODENUM]; //ノード
 
 int main(int argc, const char * argv[]) {
@@ -29,7 +28,7 @@ int main(int argc, const char * argv[]) {
 	senders_next.clear();
 	
 	
-	/********** 初期設定 **********/
+	/* * * * * * * * * * 初期設定 * * * * * * * * * */
 	/* 各ノードを配置 */
 	node[0].setXY(0, 0);
 	node[1].setXY(2, 1);
@@ -37,23 +36,52 @@ int main(int argc, const char * argv[]) {
 	node[3].setXY(5, 4);
 	node[4].setXY(6, 6);
 	
-	/* ノード番号とZ記法座標を付与 */
 	for (int i = 0; i < NODENUM; i++) {
 		node[i].setNodeNum(i);
-		node[i].setZ(SIDE);
 	}
 	
 	/* 送信元を1つ指定 */
 	Message a;
 	a.setID(1);
 	a.setPath(NODENUM-1);
-	node[NODENUM-1].setMessage(a);
-	senders_now.push_back(NODENUM-1);
+	node[0].setMessage(a);
+	senders_now.push_back(0);
 	
 	
 	
-	/********** Rooting開始 **********/
-	/* 近隣ノードの把握, LeafSetとRoutingTableの作成 */
+	
+	
+	/* * * * * * * * * * Routing * * * * * * * * * */
+	/* (x,y)座標をZ記法に */
+	for (int i = 0; i < NODENUM; i++) {
+		int side = SIDE / 2;
+		int x = node[i].getX();
+		int y = node[i].getY();
+		
+		while (side >= 1) {
+			if (y < side) {
+				if (x < side) {
+					node[i].setZ(0);
+				} else {
+					node[i].setZ(1);
+					x -= side;
+				}
+			} else {
+				if (x < side) {
+					node[i].setZ(2);
+					y -= side;
+				} else {
+					node[i].setZ(3);
+					x -= side;
+					y -= side;
+				}
+			}
+			
+			side = side / 2;
+		}
+	}
+	
+	/* Leaf Setの設定 */
 	for (int i = 0; i < NODENUM; i++) {
 		for (int j = 0; j < NODENUM; j++) {
 			/* ノード間の距離計算(△x+△y) */
@@ -61,17 +89,23 @@ int main(int argc, const char * argv[]) {
 			int y = abs(node[i].getY() - node[j].getY());
 			int range = x*x + y*y;
 			
-			/* ブロードキャスト可能範囲であれば送信 */
+			/* ブロードキャスト可能範囲であればLSに追加 */
 			if ((range != 0) && (range <= RADIUS*RADIUS)) {
-				/* 近隣ノード同士の表示 */
-				cout << "	" << i << " -> " << "" << j << "" << endl;
+				
 			}
+			
 		}
+	}
+	
+	/* Routing Tableの設定 */
+	for (int i = 0; i < NODENUM; i++) {
 	}
 	
 	
 	
-	/********** Forwarding開始 **********/
+	
+	
+	/* * * * * * * * * * Forwarding * * * * * * * * * */
 	cout << "----- Time Slot -----" << endl;
 	
 	for (int timeslot = 1; ; timeslot++) {

@@ -72,12 +72,12 @@
 				BC73C07F1F946E2C005E8F53 /* main.cpp */,
 				BCAF11A41FC6FC61005F3B7E /* RoutingTable.cpp */,
 				BCAF11A51FC6FC61005F3B7E /* RoutingTable.h */,
+				BC2241861FCFC09B0082EC36 /* LeafSet.cpp */,
+				BC2241871FCFC09B0082EC36 /* LeafSet.h */,
 				BC13E8041F94706700AAD517 /* Message.cpp */,
 				BC13E8051F94706700AAD517 /* Message.h */,
 				BC13E8011F94703400AAD517 /* Node.cpp */,
 				BC13E8021F94703400AAD517 /* Node.h */,
-				BC2241861FCFC09B0082EC36 /* LeafSet.cpp */,
-				BC2241871FCFC09B0082EC36 /* LeafSet.h */,
 			);
 			path = Flooding;
 			sourceTree = "<group>";
