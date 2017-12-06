@@ -1,3 +1,4 @@
+
 //
 //  RoutingTable.h
 //  Flooding
@@ -12,19 +13,19 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include "Hash.h"
 
 using namespace std;
 
 /* Pastry方式のルーティングテーブル用クラス */
 class RoutingTable {
-private:
+	private:
+		//vectorにしよう 添字アクセス出来る
+		unordered_map<vector<int>, int, Hash> table; //Key:Z記法座標, Value:NextHop
 	
-public:
-//	unordered_map<vector<int>, int> table; //Key:Z記法座標, Value:NextHop
-	
-//	/* RTの初期設定 */
-//	void setUp(vector<int> z_id);
-
+	public:
+		/* RTの初期設定 */
+		void setUp(vector<int> z_id);
 	
 };
 

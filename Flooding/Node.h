@@ -13,7 +13,6 @@
 #include <list>
 #include <vector>
 #include "Message.h"
-#include "LeafSet.h"
 #include "RoutingTable.h"
 
 using namespace std;
@@ -26,7 +25,6 @@ private:
 	int node_num = -1; //ノード番号
 	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
-	LeafSet ls; //リーフセット(近隣ノード集合)
 	RoutingTable rt; //経路表(Z記法とそれに最も近いNextHop)
 	
 	

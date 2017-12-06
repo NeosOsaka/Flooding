@@ -14,7 +14,6 @@
 #include "Message.h"
 #include "Node.h"
 #include "RoutingTable.h"
-#include "LeafSet.h"
 
 
 using namespace std;
@@ -47,7 +46,7 @@ int main(int argc, const char * argv[]) {
 	/* 送信元を1つ指定 */
 	Message a;
 	a.setID(1);
-	a.setPath(0);
+	a.setPath(NODENUM-1);
 	node[0].setMessage(a);
 	senders_now.push_back(0);
 	
@@ -80,34 +79,28 @@ int main(int argc, const char * argv[]) {
 					y -= center;
 				}
 			}
-			
 			center = center / 2;
 		}
 		
-		/* RTの初期設定 */
 		node[i].setUpRT();
 	}
-
-	/* Leaf Setの設定 */
-	for (int i = 0; i < NODENUM; i++) {
-		for (int j = 0; j < NODENUM; j++) {
-			/* ノード間の距離計算(△x+△y) */
-			int x = abs(node[i].getX() - node[j].getX());
-			int y = abs(node[i].getY() - node[j].getY());
-			int range = x*x + y*y;
-			
-			/* ブロードキャスト可能範囲であればLSに追加 */
-			if ((range != 0) && (range <= RADIUS*RADIUS)) {
-
+	
+		/* Leaf Setの設定 */
+		for (int i = 0; i < NODENUM; i++) {
+			for (int j = 0; j < NODENUM; j++) {
+				/* ノード間の距離計算(△x+△y) */
+				int x = abs(node[i].getX() - node[j].getX());
+				int y = abs(node[i].getY() - node[j].getY());
+				int range = x*x + y*y;
+	
+				/* ブロードキャスト可能範囲であればLSに追加 */
+				if ((range != 0) && (range <= RADIUS*RADIUS)) {
+	
+				}
+	
 			}
-			
 		}
-	}
-	
-	/* Routing Tableの設定 */
-	for (int i = 0; i < NODENUM; i++) {
-	}
-	
+
 	
 	
 	

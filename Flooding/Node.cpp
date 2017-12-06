@@ -111,5 +111,5 @@ vector<int> Node::getZ() {
 
 /* RTの初期設定 */
 void Node::setUpRT() {
-//	rt.setUp(this->z_id);
+	rt.setUp(z_id);
 }
