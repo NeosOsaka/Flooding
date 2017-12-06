@@ -108,3 +108,8 @@ void Node::setZ(int num) {
 vector<int> Node::getZ() {
 	return z_id;
 }
+
+/* RTの初期設定 */
+void Node::setUpRT() {
+//	rt.setUp(this->z_id);
+}

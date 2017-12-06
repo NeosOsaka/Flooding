@@ -13,6 +13,8 @@
 #include <string>
 #include "Message.h"
 #include "Node.h"
+#include "RoutingTable.h"
+#include "LeafSet.h"
 
 
 using namespace std;
@@ -45,7 +47,7 @@ int main(int argc, const char * argv[]) {
 	/* 送信元を1つ指定 */
 	Message a;
 	a.setID(1);
-	a.setPath(NODENUM-1);
+	a.setPath(0);
 	node[0].setMessage(a);
 	senders_now.push_back(0);
 	
@@ -56,53 +58,56 @@ int main(int argc, const char * argv[]) {
 	/* * * * * * * * * * Routing * * * * * * * * * */
 	/* (x,y)座標をZ記法に */
 	for (int i = 0; i < NODENUM; i++) {
-		int side = SIDE / 2;
+		int center = SIDE / 2;
 		int x = node[i].getX();
 		int y = node[i].getY();
 		
-		while (side >= 1) {
-			if (y < side) {
-				if (x < side) {
+		while (center >= 1) {
+			if (y < center) {
+				if (x < center) {
 					node[i].setZ(0);
 				} else {
 					node[i].setZ(1);
-					x -= side;
+					x -= center;
 				}
 			} else {
-				if (x < side) {
+				if (x < center) {
 					node[i].setZ(2);
-					y -= side;
+					y -= center;
 				} else {
 					node[i].setZ(3);
-					x -= side;
-					y -= side;
+					x -= center;
+					y -= center;
 				}
 			}
 			
-			side = side / 2;
+			center = center / 2;
 		}
+		
+		/* RTの初期設定 */
+		node[i].setUpRT();
 	}
 
-//	/* Leaf Setの設定 */
-//	for (int i = 0; i < NODENUM; i++) {
-//		for (int j = 0; j < NODENUM; j++) {
-//			/* ノード間の距離計算(△x+△y) */
-//			int x = abs(node[i].getX() - node[j].getX());
-//			int y = abs(node[i].getY() - node[j].getY());
-//			int range = x*x + y*y;
-//			
-//			/* ブロードキャスト可能範囲であればLSに追加 */
-//			if ((range != 0) && (range <= RADIUS*RADIUS)) {
-//				
-//			}
-//			
-//		}
-//	}
-//	
-//	/* Routing Tableの設定 */
-//	for (int i = 0; i < NODENUM; i++) {
-//	}
-//	
+	/* Leaf Setの設定 */
+	for (int i = 0; i < NODENUM; i++) {
+		for (int j = 0; j < NODENUM; j++) {
+			/* ノード間の距離計算(△x+△y) */
+			int x = abs(node[i].getX() - node[j].getX());
+			int y = abs(node[i].getY() - node[j].getY());
+			int range = x*x + y*y;
+			
+			/* ブロードキャスト可能範囲であればLSに追加 */
+			if ((range != 0) && (range <= RADIUS*RADIUS)) {
+
+			}
+			
+		}
+	}
+	
+	/* Routing Tableの設定 */
+	for (int i = 0; i < NODENUM; i++) {
+	}
+	
 	
 	
 	

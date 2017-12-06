@@ -11,28 +11,29 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 class LeafSet {
-private:
-
-public:
-	int nodenum; //ノード番号
-	vector<int> z_id; //Z記法座標
-	int x,y; //(x,y)座標
-	
-	/* Z記法座標の設定 */
-	void setNodeNum(int nodenum);
-	
-	/* Z記法座標の取得 */
-	int getNodeNum();
-	
-	/* Z記法座標の設定 */
-	void setZID(vector<int> z_id);
-	
-	/* Z記法座標の取得 */
-	vector<int> getZID();
+//private:
+//
+//public:
+//	int nodenum; //ノード番号
+//	vector<int> z_id; //Z記法座標
+//	int x,y; //(x,y)座標
+//	
+//	/* Z記法座標の設定 */
+//	void setNodeNum(int nodenum);
+//	
+//	/* Z記法座標の取得 */
+//	int getNodeNum();
+//	
+//	/* Z記法座標の設定 */
+//	void setZID(vector<int> z_id);
+//	
+//	/* Z記法座標の取得 */
+//	vector<int> getZID();
 	
 
 };

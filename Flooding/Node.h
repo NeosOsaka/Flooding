@@ -72,6 +72,9 @@ public:
 	
 	/* Z記法座標の取得 */
 	vector<int> getZ();
+	
+	/* RTの初期設定 */
+	void setUpRT();
 };
 
 #endif /* defined(__Flooding__Node__) */

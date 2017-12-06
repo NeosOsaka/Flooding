@@ -15,20 +15,16 @@ using namespace std;
 
 /* RTの初期設定 */
 //void RoutingTable::setUp(vector<int> z_id) {
-//	for (int num : z_id) {
-//		for (int i = 0; i < 4; i++) {
+//	for (int i = 0; i < z_id.size(); i++) {
+//		for (int j = 0; j < 4; i++) {
 //			vector<int> temp = z_id;
 //			
 //			/* tempの値を1つだけ変えてKeyとして保存 */
-//			if (num != i) {
+//			if (temp[i] != j) {
 //				/* RTのZ記法の要素生成 */
-//				
+//				temp[i] = j;
+//				table[temp] = 0;
 //			}
 //		}
 //	}
-//}
-//
-///* NextHopの追加 */
-//void RoutingTable::addNextHop(vector<int> z_id, int nodenum) {
-//	
 //}
