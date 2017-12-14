@@ -12,18 +12,17 @@
 
 #include <iostream>
 #include <vector>
-#include <unordered_map>
-#include "Hash.h"
+#include "Entry.h"
 
 using namespace std;
 
 /* Pastry方式のルーティングテーブル用クラス */
 class RoutingTable {
 	private:
-		//vectorにしよう 添字アクセス出来る
-		unordered_map<vector<int>, int, Hash> table; //Key:Z記法座標, Value:NextHop
-	
+
 	public:
+		vector<Entry> entry; //RT(=エントリの集合)
+	
 		/* RTの初期設定 */
 		void setUp(vector<int> z_id);
 	

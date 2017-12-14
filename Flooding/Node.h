@@ -21,14 +21,14 @@ using namespace std;
 class Node {
 private:
 	int x,y; //(x,y)座標
-	vector<int> z_id; //Z記法座標
 	int node_num = -1; //ノード番号
 	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
-	RoutingTable rt; //経路表(Z記法とそれに最も近いNextHop)
-	
 	
 public:
+	vector<int> z_id; //Z記法座標
+	RoutingTable rt; //Routing Table(宛先/Hop数:Next Hop)
+	
 	/* (x,y)座標の指定 */
 	void setXY(int x, int y);
 	
@@ -64,15 +64,15 @@ public:
 	
 	/* ある識別子のメッセージを持っているか否か */
 	bool hasMessage(int ID);
-	
-	/* Z記法座標の設定 */
-	void setZ(int num);
-	
-	/* Z記法座標の取得 */
-	vector<int> getZ();
-	
+
 	/* RTの初期設定 */
 	void setUpRT();
+	
+	/* RTの送信 */
+	RoutingTable sendRT();
+	
+	/* RTの受信 */
+	void receiveRT(RoutingTable rt);
 };
 
 #endif /* defined(__Flooding__Node__) */

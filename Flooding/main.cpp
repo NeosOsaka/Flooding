@@ -9,11 +9,11 @@
 #include <iostream>
 #include <list>
 #include <vector>
-#include <fstream>
 #include <string>
 #include "Message.h"
 #include "Node.h"
 #include "RoutingTable.h"
+#include "Entry.h"
 
 
 using namespace std;
@@ -29,7 +29,6 @@ int main(int argc, const char * argv[]) {
 	list<int> senders_next; //次スロットで送信を行うノード集合
 	senders_now.clear();
 	senders_next.clear();
-	
 	
 	/* * * * * * * * * * 初期設定 * * * * * * * * * */
 	/* 各ノードを配置 */
@@ -64,17 +63,17 @@ int main(int argc, const char * argv[]) {
 		while (center >= 1) {
 			if (y < center) {
 				if (x < center) {
-					node[i].setZ(0);
+					node[i].z_id.push_back(0);
 				} else {
-					node[i].setZ(1);
+					node[i].z_id.push_back(1);
 					x -= center;
 				}
 			} else {
 				if (x < center) {
-					node[i].setZ(2);
+					node[i].z_id.push_back(2);
 					y -= center;
 				} else {
-					node[i].setZ(3);
+					node[i].z_id.push_back(3);
 					x -= center;
 					y -= center;
 				}
@@ -85,7 +84,7 @@ int main(int argc, const char * argv[]) {
 		node[i].setUpRT();
 	}
 	
-		/* Leaf Setの設定 */
+		/* Routing Tableの設定 */
 		for (int i = 0; i < NODENUM; i++) {
 			for (int j = 0; j < NODENUM; j++) {
 				/* ノード間の距離計算(△x+△y) */
@@ -93,9 +92,9 @@ int main(int argc, const char * argv[]) {
 				int y = abs(node[i].getY() - node[j].getY());
 				int range = x*x + y*y;
 	
-				/* ブロードキャスト可能範囲であればLSに追加 */
+				/* ブロードキャスト可能範囲であればRTを渡す */
 				if ((range != 0) && (range <= RADIUS*RADIUS)) {
-	
+					//
 				}
 	
 			}
