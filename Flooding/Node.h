@@ -72,7 +72,7 @@ public:
 	RoutingTable sendRT();
 	
 	/* RTの受信 */
-	void receiveRT(RoutingTable rt);
+	void receiveRT(RoutingTable rt, int node_num);
 };
 
 #endif /* defined(__Flooding__Node__) */

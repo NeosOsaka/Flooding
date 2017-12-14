@@ -26,6 +26,9 @@ class RoutingTable {
 		/* RTの初期設定 */
 		void setUp(vector<int> z_id);
 	
+		/* 更新 */
+		void update(RoutingTable rt, int node_num);
+	
 };
 
 #endif /* defined(__Flooding__RoutingTable__) */

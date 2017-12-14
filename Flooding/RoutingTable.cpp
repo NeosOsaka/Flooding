@@ -46,3 +46,8 @@ void RoutingTable::setUp(vector<int> z_id) {
 		}
 	}
 }
+
+/* RTの更新 */
+void RoutingTable::update(RoutingTable rt, int node_num){
+	
+}

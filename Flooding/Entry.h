@@ -23,6 +23,8 @@ public:
 	vector<int> destination; //宛先
 	int hop_num; //Hop数
 	int next_hop; //Next Hop(=ノード番号)
+	
+	bool updateEntry(Entry);
 };
 
 #endif /* defined(__Flooding__Entry__) */

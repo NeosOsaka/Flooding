@@ -110,6 +110,6 @@ RoutingTable Node::sendRT() {
 }
 
 /* RTの受信 */
-void Node::receiveRT(RoutingTable rt) {
+void Node::receiveRT(RoutingTable rt, int node_num) {
 	
 }

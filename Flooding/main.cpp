@@ -84,21 +84,21 @@ int main(int argc, const char * argv[]) {
 		node[i].setUpRT();
 	}
 	
-		/* Routing Tableの設定 */
-		for (int i = 0; i < NODENUM; i++) {
-			for (int j = 0; j < NODENUM; j++) {
-				/* ノード間の距離計算(△x+△y) */
-				int x = abs(node[i].getX() - node[j].getX());
-				int y = abs(node[i].getY() - node[j].getY());
-				int range = x*x + y*y;
-	
-				/* ブロードキャスト可能範囲であればRTを渡す */
-				if ((range != 0) && (range <= RADIUS*RADIUS)) {
-					//
-				}
-	
-			}
-		}
+//		/* Routing Tableの設定 */
+//		for (int i = 0; i < NODENUM; i++) {
+//			for (int j = 0; j < NODENUM; j++) {
+//				/* ノード間の距離計算(△x+△y) */
+//				int x = abs(node[i].getX() - node[j].getX());
+//				int y = abs(node[i].getY() - node[j].getY());
+//				int range = x*x + y*y;
+//	
+//				/* ブロードキャスト可能範囲であればRTを渡す */
+//				if ((range != 0) && (range <= RADIUS*RADIUS)) {
+//					node[i].receiveRT(node[j].sendRT(), j);
+//				}
+//	
+//			}
+//		}
 
 	
 	
