@@ -80,25 +80,26 @@ int main(int argc, const char * argv[]) {
 			}
 			center = center / 2;
 		}
-		
+		/* Routing Tableの初期設定 */
 		node[i].setUpRT();
 	}
 	
-		/* Routing Tableの設定 */
+	/* Routing Tableの更新,全宛先を補完 */
+	for (int timeslot = 0; timeslot < 4; timeslot++) {
 		for (int i = 0; i < NODENUM; i++) {
 			for (int j = 0; j < NODENUM; j++) {
 				/* ノード間の距離計算(△x+△y) */
 				int x = abs(node[i].getX() - node[j].getX());
 				int y = abs(node[i].getY() - node[j].getY());
 				int range = x*x + y*y;
-	
+				
 				/* ブロードキャスト可能範囲であればRTを渡す */
 				if ((range != 0) && (range <= RADIUS*RADIUS)) {
 					node[i].receiveRT(node[j].sendRT(), j);
 				}
-	
 			}
 		}
+	}
 
 	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
 	for (int i = 0; i < NODENUM; i++) {

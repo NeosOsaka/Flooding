@@ -51,15 +51,15 @@ void RoutingTable::setUp(vector<int> z_id) {
 
 /* RTの更新 */
 void RoutingTable::update(RoutingTable rt, int node_num){
-	/* 受け取ったRTの各エントリを取り出し、自身のどのエントリのポリシーと合致しているか比較*/
-	for (Entry entry_s : rt.table) {
+	/* 受け取ったRTの各エントリを取り出し、自身のどのエントリのポリシーと合致しているか比較 */
+	for (Entry entry : rt.table) {
 		/* エントリに宛先があれば自分のどのエントリに入れるか比較 */
-		if (!(entry_s.address.empty())) {
+		if (!(entry.address.empty())) {
 			for (int i = 0; i < this->table.size(); i++) {
 				/* 受信側ノードのポリシーと送信側ノードのエントリの宛先の比較 */
 				bool match = true;
-				for (int j = 0; i < table[i].policy.size(); j++) {
-					if (entry_s.address[j] !=table[i].policy[j]) {
+				for (int j = 0; j < table[i].policy.size(); j++) {
+					if (entry.address[j] != table[i].policy[j]) {
 						match = false;
 						break;
 					}
@@ -67,10 +67,10 @@ void RoutingTable::update(RoutingTable rt, int node_num){
 				
 				if (match) {
 					/* まだ宛先が無いorホップ数がより短くなる場合 */
-					if (table[i].address.empty() || ((entry_s.hop_num)+1 < table[i].hop_num)) {
+					if (table[i].address.empty() || ((entry.hop_num)+1 < table[i].hop_num)) {
 						/* エントリの更新 */
-						table[i].address = entry_s.address;
-						table[i].hop_num = entry_s.hop_num + 1;
+						table[i].address = entry.address;
+						table[i].hop_num = entry.hop_num + 1;
 						table[i].next_hop = node_num;
 						return;
 					}
