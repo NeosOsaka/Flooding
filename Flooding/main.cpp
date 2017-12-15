@@ -63,17 +63,17 @@ int main(int argc, const char * argv[]) {
 		while (center >= 1) {
 			if (y < center) {
 				if (x < center) {
-					node[i].z_id.push_back(0);
+					node[i].setZ(0);
 				} else {
-					node[i].z_id.push_back(1);
+					node[i].setZ(1);
 					x -= center;
 				}
 			} else {
 				if (x < center) {
-					node[i].z_id.push_back(2);
+					node[i].setZ(2);
 					y -= center;
 				} else {
-					node[i].z_id.push_back(3);
+					node[i].setZ(3);
 					x -= center;
 					y -= center;
 				}
@@ -84,23 +84,35 @@ int main(int argc, const char * argv[]) {
 		node[i].setUpRT();
 	}
 	
-//		/* Routing Tableの設定 */
-//		for (int i = 0; i < NODENUM; i++) {
-//			for (int j = 0; j < NODENUM; j++) {
-//				/* ノード間の距離計算(△x+△y) */
-//				int x = abs(node[i].getX() - node[j].getX());
-//				int y = abs(node[i].getY() - node[j].getY());
-//				int range = x*x + y*y;
-//	
-//				/* ブロードキャスト可能範囲であればRTを渡す */
-//				if ((range != 0) && (range <= RADIUS*RADIUS)) {
-//					node[i].receiveRT(node[j].sendRT(), j);
-//				}
-//	
-//			}
-//		}
-
+		/* Routing Tableの設定 */
+		for (int i = 0; i < NODENUM; i++) {
+			for (int j = 0; j < NODENUM; j++) {
+				/* ノード間の距離計算(△x+△y) */
+				int x = abs(node[i].getX() - node[j].getX());
+				int y = abs(node[i].getY() - node[j].getY());
+				int range = x*x + y*y;
 	
+				/* ブロードキャスト可能範囲であればRTを渡す */
+				if ((range != 0) && (range <= RADIUS*RADIUS)) {
+					node[i].receiveRT(node[j].sendRT(), j);
+				}
+	
+			}
+		}
+
+	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+	for (int i = 0; i < NODENUM; i++) {
+		cout << "Node[" << i << "]" << endl;
+		for (int j = 0; j < node[i].rt.table.size(); j++) {
+			if (!(node[i].rt.table[j].address.empty())) {
+				for (int z : node[i].rt.table[j].address) {
+					cout << z << "/";
+				}
+				cout << endl;
+			}
+		}
+		cout << endl;
+	}
 	
 	
 	

@@ -99,6 +99,16 @@ bool Node::hasMessage(int ID) {
 	return false;
 }
 
+/* Z記法座標の設定 */
+void Node::setZ(int num) {
+	z_id.push_back(num);
+}
+
+/* Z記法座標の取得 */
+vector<int> Node::getZ() {
+	return z_id;
+}
+
 /* RTの初期設定 */
 void Node::setUpRT() {
 	rt.setUp(this->z_id);
@@ -111,5 +121,5 @@ RoutingTable Node::sendRT() {
 
 /* RTの受信 */
 void Node::receiveRT(RoutingTable rt, int node_num) {
-	
+	this->rt.update(rt, node_num);
 }

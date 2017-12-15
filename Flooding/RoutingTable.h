@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Entry.h"
 
 using namespace std;
@@ -21,7 +22,7 @@ class RoutingTable {
 	private:
 
 	public:
-		vector<Entry> entry; //RT(=エントリの集合)
+		vector<Entry> table; //RT(=エントリの集合)
 	
 		/* RTの初期設定 */
 		void setUp(vector<int> z_id);

@@ -10,6 +10,7 @@
 #include "Entry.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -22,9 +23,10 @@ void RoutingTable::setUp(vector<int> z_id) {
 	/* N桁合致(=自分自身)のZ_IDを追加 */
 	Entry myself;
 	myself.policy = z_id;
+	myself.address = z_id;
 	myself.hop_num = 0;
 	myself.next_hop = -1; //自分自身のNextHopどうするか?
-	entry.push_back(myself);
+	table.push_back(myself);
 	
 	for (int i = 0; i < z_id.size(); i++) {
 		Entry temp;
@@ -40,7 +42,7 @@ void RoutingTable::setUp(vector<int> z_id) {
 			if (z_id[policy.size()] != k) {
 				policy.push_back(k);
 				temp.policy = policy;
-				entry.push_back(temp);
+				table.push_back(temp);
 				policy.pop_back();
 			}
 		}
@@ -49,5 +51,31 @@ void RoutingTable::setUp(vector<int> z_id) {
 
 /* RTの更新 */
 void RoutingTable::update(RoutingTable rt, int node_num){
-	
+	/* 受け取ったRTの各エントリを取り出し、自身のどのエントリのポリシーと合致しているか比較*/
+	for (Entry entry_s : rt.table) {
+		/* エントリに宛先があれば自分のどのエントリに入れるか比較 */
+		if (!(entry_s.address.empty())) {
+			for (int i = 0; i < this->table.size(); i++) {
+				/* 受信側ノードのポリシーと送信側ノードのエントリの宛先の比較 */
+				bool match = true;
+				for (int j = 0; i < table[i].policy.size(); j++) {
+					if (entry_s.address[j] !=table[i].policy[j]) {
+						match = false;
+						break;
+					}
+				}
+				
+				if (match) {
+					/* まだ宛先が無いorホップ数がより短くなる場合 */
+					if (table[i].address.empty() || ((entry_s.hop_num)+1 < table[i].hop_num)) {
+						/* エントリの更新 */
+						table[i].address = entry_s.address;
+						table[i].hop_num = entry_s.hop_num + 1;
+						table[i].next_hop = node_num;
+						return;
+					}
+				}
+			}
+		}
+	}
 }
