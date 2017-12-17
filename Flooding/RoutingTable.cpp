@@ -79,3 +79,29 @@ void RoutingTable::update(RoutingTable rt, int node_num){
 		}
 	}
 }
+
+/* 目的地に対するNextHopの取得 */
+int RoutingTable::getNextHop(vector<int> destination) {
+	/* 自身のRTのどの宛先と最も近いか比較 */
+	for (int i = 0; i < this->table.size(); i++) {
+		/* 宛先が空でないエントリで */
+		if (!table[i].address.empty()) {
+			bool match = true;
+			/* ポリシーがマッチしていれば */
+			for (int j = 0; j < table[i].policy.size(); j++) {
+				if (destination[j] != table[i].policy[j]) {
+					match = false;
+					break;
+				}
+			}
+			
+			/* NextHopを返し、次の経由先へ */
+			if (match) {
+				return table[i].next_hop;
+			}
+		}
+	}
+	
+	/* どのポリシーにもマッチしなければ到達不能 */
+	return -1;
+}

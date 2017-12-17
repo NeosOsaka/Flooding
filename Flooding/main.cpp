@@ -19,24 +19,37 @@
 using namespace std;
 
 const static int SIDE = 8; //マップの一辺
-const static int NODENUM = 5; //ノード数
+const static int NODENUM = 20; //ノード数
 Node node[NODENUM]; //ノード
 
 int main(int argc, const char * argv[]) {
 	const static int RADIUS = 3; //送信可能範囲の半径
-	int total = 0; //全ノードの総送信回数
-	list<int> senders_now; //現スロットで送信を行うノード集合
-	list<int> senders_next; //次スロットで送信を行うノード集合
-	senders_now.clear();
-	senders_next.clear();
+	int sender = 0; //最初の送信者のノード番号
+	int next_hop = -1;
+	vector<int> destination = {2,0,2}; //目的地
 	
 	/* * * * * * * * * * 初期設定 * * * * * * * * * */
 	/* 各ノードを配置 */
 	node[0].setXY(0, 0);
-	node[1].setXY(2, 1);
-	node[2].setXY(3, 3);
-	node[3].setXY(5, 4);
-	node[4].setXY(6, 6);
+	node[1].setXY(3, 0);
+	node[2].setXY(5, 0);
+	node[3].setXY(2, 1);
+	node[4].setXY(7, 1);
+	node[5].setXY(0, 2);
+	node[6].setXY(5, 2);
+	node[7].setXY(2, 3);
+	node[8].setXY(4, 3);
+	node[9].setXY(1, 4);
+	node[10].setXY(5, 4);
+	node[11].setXY(7, 4);
+	node[12].setXY(2, 5);
+	node[13].setXY(4, 5);
+	node[14].setXY(0, 6);
+	node[15].setXY(6, 6);
+	node[16].setXY(1, 7);
+	node[17].setXY(3, 7);
+	node[18].setXY(5, 7);
+	node[19].setXY(7, 7);
 	
 	for (int i = 0; i < NODENUM; i++) {
 		node[i].setNodeNum(i);
@@ -45,9 +58,8 @@ int main(int argc, const char * argv[]) {
 	/* 送信元を1つ指定 */
 	Message a;
 	a.setID(1);
-	a.setPath(NODENUM-1);
+	a.setPath(0);
 	node[0].setMessage(a);
-	senders_now.push_back(0);
 	
 	
 	
@@ -85,6 +97,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	/* Routing Tableの更新,全宛先を補完 */
+	/* 毎回半径3以内確認するのは無駄だから近隣ノード覚えさせよう */
 	for (int timeslot = 0; timeslot < 4; timeslot++) {
 		for (int i = 0; i < NODENUM; i++) {
 			for (int j = 0; j < NODENUM; j++) {
@@ -101,111 +114,61 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 
-	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
-	for (int i = 0; i < NODENUM; i++) {
-		cout << "Node[" << i << "]" << endl;
-		for (int j = 0; j < node[i].rt.table.size(); j++) {
-			if (!(node[i].rt.table[j].address.empty())) {
-				for (int z : node[i].rt.table[j].address) {
-					cout << z << "/";
-				}
-				cout << endl;
-			}
-		}
-		cout << endl;
-	}
+//	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+//	cout << "Routing Table" << endl;
+//	for (int i = 0; i < NODENUM; i++) {
+//		cout << "Node[" << i << "]" << endl;
+//		for (int j = 0; j < node[i].rt.table.size(); j++) {
+//			/* Policy */
+//			for (int p : node[i].rt.table[j].policy) {
+//				cout << p << "/";
+//			}
+//			cout << " : ";
+//			
+//			/* Address */
+//			if (!node[i].rt.table[j].address.empty()) {
+//				for (int z : node[i].rt.table[j].address) {
+//					cout << z << "/";
+//				}
+//				cout << " : ";
+//			} else {
+//				cout << "Empty : ";
+//			}
+//			
+//			/* Hop Num */
+//			if (node[i].rt.table[j].hop_num != 10000) {
+//				cout << node[i].rt.table[j].hop_num << " : ";
+//			} else {
+//				cout << "INFINITY : ";
+//			}
+//			
+//			/* Next Hop */
+//			if (node[i].rt.table[j].next_hop != -1) {
+//				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
+//			} else {
+//				cout << "Empty" << endl;
+//			}
+//		}
+//		cout << endl;
+//	}
+	
+	
 	
 	
 	
 	/* * * * * * * * * * Forwarding * * * * * * * * * */
-	cout << "----- Time Slot -----" << endl;
-	
-	for (int timeslot = 1; ; timeslot++) {
-		/* 送信ノードが残っている場合 */
-		if (senders_now.size() != 0) {
-			/* タイムスロット表示 */
-			cout << "T" << timeslot << " : " << endl;
-			
-			for (int i : senders_now) {
-				/* 送信相手を探す */
-				for (int j = 0; j < NODENUM; j++) {
-					/* ノード間の距離計算(△x+△y) */
-					int x = abs(node[i].getX() - node[j].getX());
-					int y = abs(node[i].getY() - node[j].getY());
-					int range = x*x + y*y;
-					
-					/* ブロードキャスト可能範囲であれば送信 */
-					if ((range != 0) && (range <= RADIUS*RADIUS)) {
-						/* 送受信ノードの表示 */
-						cout << "	" << i << " -> " << "" << j << "" << endl;
-						
-						/* メッセージ受け渡し */
-						bool next = node[j].receiveMessage(node[i].sendMessage());
-						
-						/* 受信ノードが新規のメッセージを受信したなら次スロットで送信する */
-						if (next) {
-							bool flag = true;
-							for (int a : senders_next) {
-								if (a == j) {
-									flag = false;
-									break;
-								}
-							}
-							
-							/* 次スロット送信リストにまだ含まれていなければ含む */
-							if (flag) {
-								senders_next.push_back(j);
-							}
-						}
-					}
-					
-				}
-			}
-			
-			senders_now.clear();
-			senders_now = senders_next;
-			senders_next.clear();
-			senders_now.sort();
-		}
+	cout << "Route:" << endl;
+	cout << sender;
+	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
+		/* メッセージの送信 */
+//		node[next_hop].receiveMessage(node[sender].sendMessage());
+		cout << " -> " << next_hop;
+		node[next_hop].rt.getNextHop(destination);
 		
-		/* 送信ノードが無ければFlooding終了 */
-		else {
-			/* 各メッセージの経路履歴の出力 */
-			cout << endl;
-			cout << "----- Message Route -----" << endl;
-			for (int i = 0; i < NODENUM; i++) {
-				cout << "Node[" << i << "] : " << endl;
-				for (Message msg : node[i].getMessage()) {
-					cout << "	" << "Msg[" << msg.getID() << "] : ";
-					for (int j : msg.getPath()) {
-						cout << j << " ";
-					}
-				}
-				cout << endl;
-			}
-			
-			/* 送信回数の出力 */
-			cout << endl;
-			for (Node a : node) {
-				total += a.getCount();
-			}
-			cout << "----- Transmission Times -----" << endl;
-			cout << total << endl;
-			cout << endl;
-			
-			/* 未受信ノードのノード番号出力 */
-			cout << "----- Not Received Nodes -----" << endl;
-			for (Node a : node) {
-				if (!a.hasMessage()) {
-					cout << "Node[" << a.getNodeNum() << "]";
-					cout << endl;
-				}
-			}
-			cout << endl;
-			
-			break;
-		}
+		/* 受信側が次の送信側へ */
+		sender = next_hop;
 	}
+	cout << endl;
 	
 	return 0;
 }

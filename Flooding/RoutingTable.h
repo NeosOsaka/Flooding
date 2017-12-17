@@ -30,6 +30,9 @@ class RoutingTable {
 		/* 更新 */
 		void update(RoutingTable rt, int node_num);
 	
+		/* 目的地に対し最も近い宛先の取得 */
+		int getNextHop(vector<int> destination);
+	
 };
 
 #endif /* defined(__Flooding__RoutingTable__) */
