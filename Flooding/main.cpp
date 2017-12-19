@@ -7,13 +7,13 @@
 //
 
 #include <iostream>
-#include <list>
 #include <vector>
 #include <string>
 #include "Message.h"
 #include "Node.h"
 #include "RoutingTable.h"
 #include "Entry.h"
+#include "Random.h"
 
 
 using namespace std;
@@ -26,7 +26,8 @@ int main(int argc, const char * argv[]) {
 	const static int RADIUS = 3; //送信可能範囲の半径
 	int sender = 0; //最初の送信者のノード番号
 	int next_hop = -1;
-	vector<int> destination = {2,0,2}; //目的地
+	vector<int> destination = {1,1,2}; //目的地
+
 	
 	/* * * * * * * * * * 初期設定 * * * * * * * * * */
 	/* 各ノードを配置 */
@@ -98,7 +99,7 @@ int main(int argc, const char * argv[]) {
 	
 	/* Routing Tableの更新,全宛先を補完 */
 	/* 毎回半径3以内確認するのは無駄だから近隣ノード覚えさせよう */
-	for (int timeslot = 0; timeslot < 4; timeslot++) {
+	for (int timeslot = 0; timeslot < 10; timeslot++) {
 		for (int i = 0; i < NODENUM; i++) {
 			for (int j = 0; j < NODENUM; j++) {
 				/* ノード間の距離計算(△x+△y) */
@@ -132,7 +133,7 @@ int main(int argc, const char * argv[]) {
 //				}
 //				cout << " : ";
 //			} else {
-//				cout << "Empty : ";
+//				cout << "EMPTY : ";
 //			}
 //			
 //			/* Hop Num */
@@ -146,7 +147,7 @@ int main(int argc, const char * argv[]) {
 //			if (node[i].rt.table[j].next_hop != -1) {
 //				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
 //			} else {
-//				cout << "Empty" << endl;
+//				cout << "NOT EXIST" << endl;
 //			}
 //		}
 //		cout << endl;
@@ -168,7 +169,7 @@ int main(int argc, const char * argv[]) {
 		/* 受信側が次の送信側へ */
 		sender = next_hop;
 	}
-	cout << endl;
+	cout << endl << endl;
 	
 	return 0;
 }

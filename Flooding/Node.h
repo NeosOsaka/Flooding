@@ -25,8 +25,12 @@ private:
 	int node_num = -1; //ノード番号
 	list<Message> msg; //メッセージ
 	int send_number = 0; //送信回数
+
 public:
+	/* Routing用の変数 */
+	vector<int> neighbors; //近隣ノード集合
 	RoutingTable rt; //Routing Table(宛先/Hop数:Next Hop)
+	
 	
 	/* (x,y)座標の指定 */
 	void setXY(int x, int y);
