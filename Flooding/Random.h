@@ -17,7 +17,7 @@ using namespace std;
 class Random {
 private:
 	/*  */
-	bool genRandBool();
+	int genRandInt();
 	
 public:
 	/* 指定された要素数分0or1を返す */
