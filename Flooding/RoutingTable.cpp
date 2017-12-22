@@ -14,8 +14,8 @@
 
 using namespace std;
 
-const static int INFINITY = 10000; //到達不能
-const static int GHOST = -1; //存在しないノード番号
+//const static int INFINITY = 10000; //到達不能
+//const static int GHOST = -1; //存在しないノード番号
 
 /* RTの初期設定 */
 void RoutingTable::setUp(vector<int> z_id) {
@@ -30,8 +30,8 @@ void RoutingTable::setUp(vector<int> z_id) {
 	
 	for (int i = 0; i < z_id.size(); i++) {
 		Entry temp;
-		temp.hop_num = INFINITY;
-		temp.next_hop = GHOST;
+		temp.hop_num = 10000;
+		temp.next_hop = -1;
 		vector<int> policy = z_id;
 		
 		for (int j = 0; j <= i; j++) {
