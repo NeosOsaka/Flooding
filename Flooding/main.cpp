@@ -26,11 +26,38 @@ int main(int argc, const char * argv[]) {
 	const static int RADIUS = 3; //送信可能範囲の半径
 	int sender = 0; //最初の送信者のノード番号
 	int next_hop = -1;
-	vector<int> destination = {3,3,3,3,3,3,3,3,3,3}; //目的地
+	vector<int> destination = {3,3,3,3,3,3,3}; //目的地
 	Random r;
 	vector<vector<bool>> node_state = r.genNodeState(SIDE); //各ノードの状態
+
+	/* Test用ここから */
+	for (int i = 0; i < SIDE; i++) {
+		for (int j = 0; j < SIDE; j++) {
+			node_state[i][j] = false;
+		}
+	}
 	
-	
+	node_state[0][0] = true;
+	node_state[0][3] = true;
+	node_state[0][5] = true;
+	node_state[1][2] = true;
+	node_state[1][7] = true;
+	node_state[2][0] = true;
+	node_state[2][5] = true;
+	node_state[3][2] = true;
+	node_state[3][4] = true;
+	node_state[4][1] = true;
+	node_state[4][5] = true;
+	node_state[4][7] = true;
+	node_state[5][2] = true;
+	node_state[5][4] = true;
+	node_state[6][0] = true;
+	node_state[6][6] = true;
+	node_state[7][1] = true;
+	node_state[7][3] = true;
+	node_state[7][5] = true;
+	node_state[7][7] = true;
+	/* ここまで */
 	
 	//	/* 到達不能なノードの削除 */
 	//	//時間かからない方法考えとく
@@ -139,64 +166,32 @@ int main(int argc, const char * argv[]) {
 		node[i].setUpRT();
 	}
 	
-	/* Routing Tableの更新,全宛先を補完 */
-	/* 毎回半径3以内確認するのは無駄だから近隣ノード覚えさせよう */
-	for (int timeslot = 0; timeslot < SIDE; timeslot++) {
-//		cout << "TimeSlot[" << timeslot << "]" << endl;
-		for (int i = 0; i < node.size(); i++) {
-			for (int j = 0; j < node.size(); j++) {
-				/* ノード間の距離計算(△x+△y) */
-				int x = abs(node[i].getX() - node[j].getX());
-				int y = abs(node[i].getY() - node[j].getY());
-				int range = x*x + y*y;
-				
-				/* ブロードキャスト可能範囲であればRTを渡す */
-				if ((range != 0) && (range <= RADIUS*RADIUS)) {
-					node[i].receiveRT(node[j].sendRT(), j);
-				}
+	/* 近隣ノードを把握する */
+	for (int i = 0; i < node.size(); i++) {
+		for (int j = 0; j < node.size(); j++) {
+			/* ノード間の距離計算(△x+△y) */
+			int x = abs(node[i].getX() - node[j].getX());
+			int y = abs(node[i].getY() - node[j].getY());
+			int range = x*x + y*y;
+			
+			/* ブロードキャスト可能範囲であればNeighborに追加 */
+			if ((range != 0) && (range <= RADIUS*RADIUS)) {
+				node[i].neighbors.push_back(j);
 			}
 		}
 	}
 	
-//	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
-//	cout << "Routing Table" << endl;
-//	for (int i = 0; i < node.size(); i++) {
-//		cout << "Node[" << i << "]" << endl;
-//		for (int j = 0; j < node[i].rt.table.size(); j++) {
-//			/* Policy */
-//			for (int p : node[i].rt.table[j].policy) {
-//				cout << p << "/";
-//			}
-//			cout << " : ";
-//			
-//			/* Address */
-//			if (!node[i].rt.table[j].address.empty()) {
-//				for (int z : node[i].rt.table[j].address) {
-//					cout << z << "/";
-//				}
-//				cout << " : ";
-//			} else {
-//				cout << "EMPTY : ";
-//			}
-//			
-//			/* Hop Num */
-//			if (node[i].rt.table[j].hop_num != 10000) {
-//				cout << node[i].rt.table[j].hop_num << " : ";
-//			} else {
-//				cout << "INFINITY : ";
-//			}
-//			
-//			/* Next Hop */
-//			if (node[i].rt.table[j].next_hop != -1) {
-//				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
-//			} else {
-//				cout << "NOT EXIST" << endl;
-//			}
-//		}
-//		cout << endl;
-//	}
-//	
+	/* Routing Tableの更新,全宛先を補完 */
+	for (int timeslot = 0; timeslot < SIDE; timeslot++) {
+		/* 近隣ノード宛にRT送信 */
+		for (int i = 0; i < node.size(); i++) {
+			for (int j : node[i].neighbors) {
+				node[j].receiveRT(node[i].sendRT(), i);
+			}
+		}
+	}
 	
+
 	
 	
 	
@@ -207,6 +202,7 @@ int main(int argc, const char * argv[]) {
 			
 		}
 	}
+	
 	cout << "(" << node[sender].getX() << "," << node[sender].getY() << ")";
 	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
 		/* メッセージの送信 */
@@ -220,7 +216,43 @@ int main(int argc, const char * argv[]) {
 	cout << endl << endl;
 	
 	
-	
+	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+	cout << "Routing Table" << endl;
+	for (int i = 0; i < node.size(); i++) {
+		cout << "Node[" << i << "]" << endl;
+		for (int j = 0; j < node[i].rt.table.size(); j++) {
+			/* Policy */
+			for (int p : node[i].rt.table[j].policy) {
+				cout << p << "/";
+			}
+			cout << " : ";
+			
+			/* Address */
+			if (!node[i].rt.table[j].address.empty()) {
+				for (int z : node[i].rt.table[j].address) {
+					cout << z << "/";
+				}
+				cout << " : ";
+			} else {
+				cout << "EMPTY : ";
+			}
+			
+			/* Hop Num */
+			if (node[i].rt.table[j].hop_num != 10000) {
+				cout << node[i].rt.table[j].hop_num << " : ";
+			} else {
+				cout << "INFINITY : ";
+			}
+			
+			/* Next Hop */
+			if (node[i].rt.table[j].next_hop != -1) {
+				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
+			} else {
+				cout << "NOT EXIST" << endl;
+			}
+		}
+		cout << endl;
+	}
 	
 	return 0;
 }
