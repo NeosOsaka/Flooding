@@ -197,62 +197,98 @@ int main(int argc, const char * argv[]) {
 	
 	/* * * * * * * * * * Forwarding * * * * * * * * * */
 	/* 全ノード間の経路とホップ数を出力 */
-	for (int s = 0; s < node.size(); s++) {
-		for (int r = 0; r < node.size(); r++) {
-			
-		}
-	}
-	
-	cout << "(" << node[sender].getX() << "," << node[sender].getY() << ")";
-	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
-		/* メッセージの送信 */
-		cout << " -> ";
-		cout << "(" << node[next_hop].getX() << "," << node[next_hop].getY() << ")";
-		node[next_hop].rt.getNextHop(destination);
-		
-		/* 受信側が次の送信側へ */
-		sender = next_hop;
-	}
-	cout << endl << endl;
-	
-	
-	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
-	cout << "Routing Table" << endl;
+	int hop_num[node.size()];
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "]" << endl;
-		for (int j = 0; j < node[i].rt.table.size(); j++) {
-			/* Policy */
-			for (int p : node[i].rt.table[j].policy) {
-				cout << p << "/";
-			}
-			cout << " : ";
+		hop_num[i] = 0;
+	}
+	
+	/* 経路の出力 */
+	for (int start = 0; start < node.size(); start++) {
+		cout << "Node[" << start << "] :" << endl;
+		for (int end = 0; end < node.size(); end++) {
+			/* 送受信ノードの記載 */
+			cout << " ->Node[" << end << "]" <<endl;
+			cout << "   ";
 			
-			/* Address */
-			if (!node[i].rt.table[j].address.empty()) {
-				for (int z : node[i].rt.table[j].address) {
-					cout << z << "/";
-				}
-				cout << " : ";
-			} else {
-				cout << "EMPTY : ";
+			/* 経路の計算 */
+			cout << start;
+			int a = start;
+			while ((next_hop = node[a].rt.getNextHop(node[end].getZ())) != -1) {
+				/* メッセージの送信 */
+				cout << " " << next_hop;
+				
+				/* ホップ数をカウント */
+				hop_num[next_hop]++;
+				
+				/* 受信側が次の送信側へ */
+				a = next_hop;
 			}
 			
-			/* Hop Num */
-			if (node[i].rt.table[j].hop_num != 10000) {
-				cout << node[i].rt.table[j].hop_num << " : ";
-			} else {
-				cout << "INFINITY : ";
-			}
-			
-			/* Next Hop */
-			if (node[i].rt.table[j].next_hop != -1) {
-				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
-			} else {
-				cout << "NOT EXIST" << endl;
-			}
+			cout << endl;
 		}
 		cout << endl;
 	}
+
+	/* ホップ数を出力 */
+	cout << "Hop Num" << endl;
+	for (int i = 0; i < node.size(); i++) {
+		cout << "Node[" << i << "] : " << hop_num[i]-node.size()+1 << endl;
+	}
+	
+	
+	
+//	cout << "(" << node[sender].getX() << "," << node[sender].getY() << ")";
+//	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
+//		/* メッセージの送信 */
+//		cout << " -> ";
+//		cout << "(" << node[next_hop].getX() << "," << node[next_hop].getY() << ")";
+//		node[next_hop].rt.getNextHop(destination);
+//		
+//		/* 受信側が次の送信側へ */
+//		sender = next_hop;
+//	}
+//	cout << endl << endl;
+	
+
+	
+	
+//	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+//	cout << "Routing Table" << endl;
+//	for (int i = 0; i < node.size(); i++) {
+//		cout << "Node[" << i << "]" << endl;
+//		for (int j = 0; j < node[i].rt.table.size(); j++) {
+//			/* Policy */
+//			for (int p : node[i].rt.table[j].policy) {
+//				cout << p << "/";
+//			}
+//			cout << " : ";
+//			
+//			/* Address */
+//			if (!node[i].rt.table[j].address.empty()) {
+//				for (int z : node[i].rt.table[j].address) {
+//					cout << z << "/";
+//				}
+//				cout << " : ";
+//			} else {
+//				cout << "EMPTY : ";
+//			}
+//			
+//			/* Hop Num */
+//			if (node[i].rt.table[j].hop_num != 10000) {
+//				cout << node[i].rt.table[j].hop_num << " : ";
+//			} else {
+//				cout << "INFINITY : ";
+//			}
+//			
+//			/* Next Hop */
+//			if (node[i].rt.table[j].next_hop != -1) {
+//				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
+//			} else {
+//				cout << "NOT EXIST" << endl;
+//			}
+//		}
+//		cout << endl;
+//	}
 	
 	return 0;
 }
