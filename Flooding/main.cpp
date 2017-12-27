@@ -24,12 +24,14 @@ vector<Node> node; //ノード集合
 
 int main(int argc, const char * argv[]) {
 	const static int RADIUS = 3; //送信可能範囲の半径
-	int sender = 0; //最初の送信者のノード番号
+	//	int sender = 0; //最初の送信者のノード番号
 	int next_hop = -1;
 	vector<int> destination = {3,3,3,3,3,3,3}; //目的地
 	Random r;
 	vector<vector<bool>> node_state = r.genNodeState(SIDE); //各ノードの状態
-
+	ifstream ifs; //入力ファイル
+	ofstream ofs; //出力ファイル
+	
 	/* Test用ここから */
 	for (int i = 0; i < SIDE; i++) {
 		for (int j = 0; j < SIDE; j++) {
@@ -58,35 +60,6 @@ int main(int argc, const char * argv[]) {
 	node_state[7][5] = true;
 	node_state[7][7] = true;
 	/* ここまで */
-	
-	//	/* 到達不能なノードの削除 */
-	//	//時間かからない方法考えとく
-	//	for (int i = 0; i < SIDE; i++) {
-	//		for (int j = 0; j < SIDE; j++) {
-	//			/* (j,i)にノードが居る場合 */
-	//			if (node_state[i][j]) {
-	//				bool flag = true;
-	//
-	//				for (int k = i-RADIUS; k <= i+RADIUS; k++) {
-	//					for (int l = j-RADIUS; l <= j+RADIUS; l++) {
-	//						if (k>=0 && l>=0 && k<SIDE && l<SIDE && !((k==i)&&(l==j)) ) {
-	//							int x = j - l;
-	//							int y = i - k;
-	//							if (x*x + y*y <= RADIUS*RADIUS) {
-	//								flag = false;
-	//							}
-	//						}
-	//					}
-	//				}
-	//
-	//				/* もし近隣ノードが存在しなければ */
-	//				if (flag) {
-	//					/* (j,i)を削除 */
-	//					node_state[i][j] = false;
-	//				}
-	//			}
-	//		}
-	//	}
 	
 	/* マップとノードの描画 */
 	for (int i = 0; i < SIDE; i++) {
@@ -191,104 +164,115 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 	
-
+	
 	
 	
 	
 	/* * * * * * * * * * Forwarding * * * * * * * * * */
 	/* 全ノード間の経路とホップ数を出力 */
+	int pass_num[node.size()];
 	int hop_num[node.size()];
 	for (int i = 0; i < node.size(); i++) {
+		pass_num[i] = 0;
 		hop_num[i] = 0;
 	}
 	
 	/* 経路の出力 */
 	for (int start = 0; start < node.size(); start++) {
-		cout << "Node[" << start << "] :" << endl;
 		for (int end = 0; end < node.size(); end++) {
 			/* 送受信ノードの記載 */
-			cout << " ->Node[" << end << "]" <<endl;
-			cout << "   ";
+			cout << start << " -> " << end << ",  ";
 			
 			/* 経路の計算 */
 			cout << start;
 			int a = start;
+			int hop = 0;
 			while ((next_hop = node[a].rt.getNextHop(node[end].getZ())) != -1) {
 				/* メッセージの送信 */
 				cout << " " << next_hop;
 				
-				/* ホップ数をカウント */
-				hop_num[next_hop]++;
-				
+				/* 通過回数とホップ数をカウント */
+				pass_num[next_hop]++;
+				hop++;
 				/* 受信側が次の送信側へ */
 				a = next_hop;
 			}
-			
-			cout << endl;
+			cout << ",  " << hop << "Hop" << endl;
+			hop_num[start] += hop;
 		}
 		cout << endl;
 	}
-
-	/* ホップ数を出力 */
-	cout << "Hop Num" << endl;
+	
+	
+	/* 通過回数を出力 */
+	cout << "Pass Num" << endl;
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "] : " << hop_num[i]-node.size()+1 << endl;
+		cout << "Node[" << i << "] : " << pass_num[i]-node.size()+1 << endl;
 	}
+	cout << endl;
+	
+	/* ホップ数を出力 */
+	cout << "Total Hop Num" << endl;
+	int total = 0;
+	for (int i = 0; i < node.size(); i++) {
+		cout << "Node[" << i << "] : " << hop_num[i] << endl;
+		total += hop_num[i];
+	}
+	cout << "Total : " << total << endl;
+	cout << endl;
+	
+	
+	//	cout << "(" << node[sender].getX() << "," << node[sender].getY() << ")";
+	//	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
+	//		/* メッセージの送信 */
+	//		cout << " -> ";
+	//		cout << "(" << node[next_hop].getX() << "," << node[next_hop].getY() << ")";
+	//		node[next_hop].rt.getNextHop(destination);
+	//
+	//		/* 受信側が次の送信側へ */
+	//		sender = next_hop;
+	//	}
+	//	cout << endl << endl;
 	
 	
 	
-//	cout << "(" << node[sender].getX() << "," << node[sender].getY() << ")";
-//	while ((next_hop = node[sender].rt.getNextHop(destination)) != -1) {
-//		/* メッセージの送信 */
-//		cout << " -> ";
-//		cout << "(" << node[next_hop].getX() << "," << node[next_hop].getY() << ")";
-//		node[next_hop].rt.getNextHop(destination);
-//		
-//		/* 受信側が次の送信側へ */
-//		sender = next_hop;
-//	}
-//	cout << endl << endl;
-	
-
-	
-	
-//	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
-//	cout << "Routing Table" << endl;
-//	for (int i = 0; i < node.size(); i++) {
-//		cout << "Node[" << i << "]" << endl;
-//		for (int j = 0; j < node[i].rt.table.size(); j++) {
-//			/* Policy */
-//			for (int p : node[i].rt.table[j].policy) {
-//				cout << p << "/";
-//			}
-//			cout << " : ";
-//			
-//			/* Address */
-//			if (!node[i].rt.table[j].address.empty()) {
-//				for (int z : node[i].rt.table[j].address) {
-//					cout << z << "/";
-//				}
-//				cout << " : ";
-//			} else {
-//				cout << "EMPTY : ";
-//			}
-//			
-//			/* Hop Num */
-//			if (node[i].rt.table[j].hop_num != 10000) {
-//				cout << node[i].rt.table[j].hop_num << " : ";
-//			} else {
-//				cout << "INFINITY : ";
-//			}
-//			
-//			/* Next Hop */
-//			if (node[i].rt.table[j].next_hop != -1) {
-//				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
-//			} else {
-//				cout << "NOT EXIST" << endl;
-//			}
-//		}
-//		cout << endl;
-//	}
+	//	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+	//	cout << "Routing Table" << endl;
+	//	for (int i = 0; i < node.size(); i++) {
+	//		cout << "Node[" << i << "]" << endl;
+	//		for (int j = 0; j < node[i].rt.table.size(); j++) {
+	//			/* Policy */
+	//			for (int p : node[i].rt.table[j].policy) {
+	//				cout << p << "/";
+	//			}
+	//			cout << " : ";
+	//
+	//			/* Address */
+	//			if (!node[i].rt.table[j].address.empty()) {
+	//				for (int z : node[i].rt.table[j].address) {
+	//					cout << z << "/";
+	//				}
+	//				cout << " : ";
+	//			} else {
+	//				cout << "EMPTY : ";
+	//			}
+	//
+	//			/* Hop Num */
+	//			if (node[i].rt.table[j].hop_num != 10000) {
+	//				cout << node[i].rt.table[j].hop_num << " : ";
+	//			} else {
+	//				cout << "INFINITY : ";
+	//			}
+	//
+	//			/* Next Hop */
+	//			if (node[i].rt.table[j].next_hop != -1) {
+	//				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
+	//			} else {
+	//				cout << "NOT EXIST" << endl;
+	//			}
+	//		}
+	//		cout << endl;
+	//	}
 	
 	return 0;
 }
