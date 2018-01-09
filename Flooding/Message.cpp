@@ -31,3 +31,8 @@ void Message::setID(int ID) {
 int Message::getID() {
 	return ID;
 }
+
+/* 経路のHop数を取得 */
+int Message::getHopNum() {
+	return path.size()-1;
+}

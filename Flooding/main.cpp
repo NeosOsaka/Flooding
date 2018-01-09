@@ -164,11 +164,11 @@ int main(int argc, const char * argv[]) {
 	
 	
 	/* * * * * * * * * * Forwarding * * * * * * * * * */
-	
-	/***** DVA + Pastry *****/
-	/* 全ノード間の経路とホップ数を出力 */
 	int pass_num[node.size()];
 	int hop_num[node.size()];
+	
+//	/***** DVA + Pastry *****/
+//	cout << "----- Pastry&DVA -----" << endl;
 //	for (int i = 0; i < node.size(); i++) {
 //		pass_num[i] = 0;
 //		hop_num[i] = 0;
@@ -222,6 +222,7 @@ int main(int argc, const char * argv[]) {
 //	
 //	
 //	/***** Greedy *****/
+//	cout << "----- Greedy -----" << endl;
 //	for (int i = 0; i < node.size(); i++) {
 //		pass_num[i] = 0;
 //		hop_num[i] = 0;
@@ -290,6 +291,7 @@ int main(int argc, const char * argv[]) {
 	
 	
 	/***** Flooding *****/
+	cout << "----- Flooding -----" << endl;
 	for (int i = 0; i < node.size(); i++) {
 		pass_num[i] = 0;
 		hop_num[i] = 0;
@@ -304,8 +306,6 @@ int main(int argc, const char * argv[]) {
 	Message a;
 	a.setID(1);
 	node[0].setMessage(a);
-	
-	/* 送信側ノードをセット */
 	senders_now.push_back(0);
 	
 	for (int timeslot = 1; ; timeslot++) {
@@ -342,6 +342,8 @@ int main(int argc, const char * argv[]) {
 		else {
 			/* 経路の出力 */
 			for (int j = 0; j < node.size(); j++) {
+				cout << "0" << " -> " << j <<",  ";
+				cout << "0";
 				for (Message a : node[j].msg) {
 					for (int point : a.getPath()) {
 						cout << "-" << point;
@@ -349,17 +351,11 @@ int main(int argc, const char * argv[]) {
 					cout << endl;
 				}
 			}
+			break;
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	

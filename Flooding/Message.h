@@ -32,6 +32,9 @@ public:
 	
 	/* 識別子の取得 */
 	int getID();
+	
+	/* 経路のHop数を取得 */
+	int getHopNum();
 };
 
 #endif /* defined(__Flooding__Message__) */
