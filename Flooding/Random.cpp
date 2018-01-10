@@ -20,7 +20,7 @@ vector<vector<bool>> Random::genNodeState(int map_side) {
 			
 			random_device rnd;
 			mt19937 mt(rnd());
-			uniform_int_distribution<int> rand(0,2);
+			uniform_int_distribution<int> rand(0,1);
 			
 			if (rand(mt) == 0) {
 				node_state[i][j] = true;

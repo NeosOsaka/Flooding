@@ -201,10 +201,14 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	/* Hop数を出力 */
-	cout << "Pass Num" << endl;
+	int total_hop = 0;
+	cout << "Total Hop Num" << endl;
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "] : " << pass_num[i]-node.size()+1 << endl;
+		pass_num[i] -= node.size()-1;
+		cout << "Node[" << i << "] : " << pass_num[i] << endl;
+		total_hop += pass_num[i];
 	}
+	cout << "Total : " << total_hop << endl;
 	cout << endl;
 	
 	
@@ -260,10 +264,14 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	/* Hop数を出力 */
-	cout << "Pass Num" << endl;
+	total_hop = 0;
+	cout << "Total Hop Num" << endl;
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "] : " << pass_num[i]-node.size()+1 << endl;
+		pass_num[i] -= node.size()-1;
+		cout << "Node[" << i << "] : " << pass_num[i] << endl;
+		total_hop += pass_num[i];
 	}
+	cout << "Total : " << total_hop << endl;
 	cout << endl;
 	
 	
@@ -352,10 +360,14 @@ int main(int argc, const char * argv[]) {
 	
 	
 	/* Hop数を出力 */
-	cout << "Pass Num" << endl;
+	total_hop = 0;
+	cout << "Total Hop Num" << endl;
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "] : " << pass_num[i]-node.size()+1 << endl;
+		pass_num[i] -= node.size()-1;
+		cout << "Node[" << i << "] : " << pass_num[i] << endl;
+		total_hop += pass_num[i];
 	}
+	cout << "Total : " << total_hop << endl;
 	cout << endl;
 	
 
