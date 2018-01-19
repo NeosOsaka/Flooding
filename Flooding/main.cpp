@@ -29,12 +29,12 @@ int main(int argc, const char * argv[]) {
 	Random r;
 	vector<vector<bool>> node_state = r.genNodeState(SIDE); //各ノードの状態
 	
-//		/* 全部クリア */
-//		for (int i = 0; i < SIDE; i++) {
-//			for (int j = 0; j < SIDE; j++) {
-//				node_state[i][j] = false;
-//			}
+//	/* マップクリア */
+//	for (int i = 0; i < SIDE; i++) {
+//		for (int j = 0; j < SIDE; j++) {
+//			node_state[i][j] = false;
 //		}
+//	}
 
 //	node_state[0][0] = true;
 //	node_state[0][3] = true;
@@ -58,9 +58,9 @@ int main(int argc, const char * argv[]) {
 //	node_state[7][7] = true;
 	
 	/* 中央に8×8マスのホールを作る */
-	int s = SIDE/2 - 4;
-	for (int i = s; i <s+8; i++) {
-		for (int j = s; j < s+8; j++) {
+	int s = SIDE/2 - 16;
+	for (int i = 0; i < 32; i++) {
+		for (int j = s; j < s+32; j++) {
 			node_state[i][j] = false;
 		}
 	}
@@ -181,7 +181,7 @@ int main(int argc, const char * argv[]) {
 			int hop = 0;
 			while ((next_hop = node[a].rt.getNextHop(node[end].getZ())) != -1) {
 				/* メッセージの送信 */
-				//				cout << "-" << next_hop;
+//				cout << "-" << next_hop;
 				
 				/* 通過回数とホップ数をカウント */
 				pass_num_pd[next_hop]++;
@@ -189,10 +189,16 @@ int main(int argc, const char * argv[]) {
 				/* 受信側が次の送信側へ */
 				a = next_hop;
 			}
-			//			cout << ",  " << hop << "Hop" << endl;
+			
+//			cout << ",  " << hop << "Hop" << endl;
 			hop_num_pd[start] += hop;
+			
+			/* 到達出来なかった場合 */
+			if (a != end) {
+				unreachable_pd[start]++;
+			}
 		}
-		//		cout << endl;
+//		cout << endl;
 	}
 	
 	/* Hop数を出力 */
@@ -305,13 +311,15 @@ int main(int argc, const char * argv[]) {
 	cout << endl;
 	
 	/* 到達不能回数 */
-	int total_unreachable = 0;
+	int total_unreachable_pd = 0;
+	int total_unreachable_greedy = 0;
 	cout << "Miss Hit Num" << endl;
 	for (int i = 0; i < node.size(); i++) {
-		cout << "Node[" << i << "] : " << unreachable_greedy[i] << endl;
-		total_unreachable += unreachable_greedy[i];
+		total_unreachable_pd += unreachable_pd[i];
+		total_unreachable_greedy += unreachable_greedy[i];
 	}
-	cout << total_unreachable << endl;
+	cout << "Pastry+DVA : " << total_unreachable_pd << endl;
+	cout << "Greedy : " << total_unreachable_greedy << endl;
 	
 //	//Test用ここから
 //	/* Hop数を降順にソート */
