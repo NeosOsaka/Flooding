@@ -28,6 +28,7 @@ private:
 public:
 	/* Routing用の変数 */
 	vector<int> neighbors; //近隣ノード集合
+	vector<int> neighbors_used; //使用済み近隣ノード
 	RoutingTable rt; //Routing Table(宛先/Hop数:Next Hop)
 	list<Message> msg; //メッセージ
 	int hop_pastry_dva = 0; //Pastry+DVAにおけるHop数
@@ -84,6 +85,7 @@ public:
 
 	/* RTの受信 */
 	void receiveRT(RoutingTable rt, int node_num);
+
 };
 
 

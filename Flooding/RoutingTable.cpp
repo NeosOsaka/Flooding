@@ -14,9 +14,6 @@
 
 using namespace std;
 
-//const static int INFINITY = 10000; //到達不能
-//const static int GHOST = -1; //存在しないノード番号
-
 /* RTの初期設定 */
 void RoutingTable::setUp(vector<int> z_id) {
 	/* 各エントリのポリシーを決定し、エントリをRTに追加する */
@@ -25,12 +22,12 @@ void RoutingTable::setUp(vector<int> z_id) {
 	myself.policy = z_id;
 	myself.address = z_id;
 	myself.hop_num = 0;
-	myself.next_hop = -1; //自分自身のNextHopどうするか?
+	myself.next_hop = -1;
 	table.push_back(myself);
 	
 	for (int i = 0; i < z_id.size(); i++) {
 		Entry temp;
-		temp.hop_num = 10000;
+		temp.hop_num = 100000; //INFINITYとして初期値100000
 		temp.next_hop = -1;
 		vector<int> policy = z_id;
 		
