@@ -19,7 +19,7 @@
 
 using namespace std;
 
-const static int SIDE = 8; //マップの一辺
+const static int SIDE = 16; //マップの一辺
 vector<Node> node; //ノード集合
 
 int main(int argc, const char * argv[]) {
@@ -29,39 +29,97 @@ int main(int argc, const char * argv[]) {
 	Random r;
 	vector<vector<bool>> node_state = r.genNodeState(SIDE); //各ノードの状態
 	
-		/* マップクリア */
-		for (int i = 0; i < SIDE; i++) {
-			for (int j = 0; j < SIDE; j++) {
-				node_state[i][j] = false;
-			}
-		}
 	
-		node_state[0][0] = true;
-		node_state[0][3] = true;
-		node_state[0][4] = true;
-		node_state[1][2] = true;
-		node_state[1][7] = true;
-		node_state[2][0] = true;
-		node_state[2][4] = true;
-		node_state[3][2] = true;
-		node_state[3][4] = true;
-		node_state[4][1] = true;
-		node_state[4][5] = true;
-		node_state[4][7] = true;
-		node_state[5][2] = true;
-		node_state[5][4] = true;
-		node_state[6][0] = true;
-		node_state[6][6] = true;
-		node_state[7][1] = true;
-		node_state[7][3] = true;
-		node_state[7][5] = true;
-		node_state[7][7] = true;
 	
-//	/* 中央に8×8マスのホールを作る */
-//	int s = SIDE/2 - 4;
-//	for (int i = s; i < s+8 ; i++) {
-//		for (int j = s; j < s+8; j++) {
+	/* * * * * * * * * * 初期設定 * * * * * * * * * */
+	/* マップクリア */
+//	for (int i = 0; i < SIDE; i++) {
+//		for (int j = 0; j < SIDE; j++) {
+//			node_state[i][j] = true;
+//		}
+//	}
+	
+//		node_state[0][0] = true;
+//		node_state[0][3] = true;
+//		node_state[0][4] = true;
+//		node_state[1][2] = true;
+//		node_state[1][7] = true;
+//		node_state[2][0] = true;
+//		node_state[2][4] = true;
+//		node_state[3][2] = true;
+//		node_state[3][4] = true;
+//		node_state[4][1] = true;
+//		node_state[4][5] = true;
+//		node_state[4][7] = true;
+//		node_state[5][2] = true;
+//		node_state[5][4] = true;
+//		node_state[6][0] = true;
+//		node_state[6][6] = true;
+//		node_state[7][1] = true;
+//		node_state[7][3] = true;
+//		node_state[7][5] = true;
+//		node_state[7][7] = true;
+	
+//	/* Test1:中央に16×16マスのホール */
+//	int s = SIDE/2 - 8;
+//	for (int i = s; i < s+16 ; i++) {
+//		for (int j = s; j < s+16; j++) {
 //			node_state[i][j] = false;
+//		}
+//	}
+
+//	/* Test2:中央に32×8マスのホール */
+//	int s = SIDE/2 - 16;
+//	int t = SIDE/2 - 4;
+//	for (int y = s; y < s+32 ; y++) {
+//		for (int x = t; x < t+8; x++) {
+//			node_state[y][x] = false;
+//		}
+//	}
+
+//	/* Test3:中央に32×32マスのコの字型ホール */
+//	for (int y = SIDE/2 - 16; y < SIDE/2 - 8 ; y++) {
+//		for (int x = SIDE/2 - 16; x < SIDE/2 + 16; x++) {
+//			node_state[y][x] = false;
+//		}
+//	}
+//	
+//	for (int y = SIDE/2 - 8; y < SIDE/2 + 8; y++) {
+//		for (int x = SIDE/2 + 8; x < SIDE/2 + 16; x++) {
+//			node_state[y][x] = false;
+//		}
+//	}
+//	
+//	for (int y = SIDE/2 + 8; y < SIDE/2 + 16; y++) {
+//		for (int x = SIDE/2 - 16; x < SIDE/2 + 16; x++) {
+//			node_state[y][x] = false;
+//		}
+//	}
+
+	/* Test3:中央に8×8マスのコの字型ホール */
+	for (int y = SIDE/2 - 4; y < SIDE/2 - 1; y++) {
+		for (int x = SIDE/2 - 4; x < SIDE/2 + 4; x++) {
+			node_state[y][x] = false;
+		}
+	}
+	
+	for (int y = SIDE/2 - 3; y < SIDE/2 + 2; y++) {
+		for (int x = SIDE/2 + 1; x < SIDE/2 + 4; x++) {
+			node_state[y][x] = false;
+		}
+	}
+	
+	for (int y = SIDE/2 + 1; y < SIDE/2 + 4; y++) {
+		for (int x = SIDE/2 - 4; x < SIDE/2 + 4; x++) {
+			node_state[y][x] = false;
+		}
+	}
+	
+//	/* Test4:中央に32×32マスのホール */
+//	int s = SIDE/2 - 16;
+//	for (int y = s; y < s+32 ; y++) {
+//		for (int x = s; x < s+32; x++) {
+//			node_state[y][x] = false;
 //		}
 //	}
 	
@@ -83,7 +141,6 @@ int main(int argc, const char * argv[]) {
 	}
 	cout << endl;
 	
-	/* * * * * * * * * * 初期設定 * * * * * * * * * */
 	/* 各ノードを配置 */
 	for (int i = 0; i < node.size(); i++) {
 		node[i].setNodeNum(i);
@@ -140,7 +197,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	/* Routing Tableの更新,全宛先を補完 */
-	for (int timeslot = 0; timeslot < SIDE; timeslot++) {
+	for (int timeslot = 0; timeslot < 3*SIDE; timeslot++) {
 		/* 近隣ノード宛にRT送信 */
 		for (int i = 0; i < node.size(); i++) {
 			for (int j : node[i].neighbors) {
@@ -177,15 +234,15 @@ int main(int argc, const char * argv[]) {
 	for (int start = 0; start < node.size(); start++) {
 		for (int end = 0; end < node.size(); end++) {
 			/* 送受信ノードの記載 */
-						cout << start << " -> " << end << ",  ";
+			cout << start << " -> " << end << ",  ";
 			
 			/* 経路の計算 */
-						cout << start;
+			cout << start;
 			int a = start;
 			int hop = 0;
 			while ((next_hop = node[a].rt.getNextHop(node[end].getZ())) != -1) {
 				/* メッセージの送信 */
-								cout << "-" << next_hop;
+				cout << "-" << next_hop;
 				
 				/* 通過回数とホップ数をカウント */
 				pass_num_pd[next_hop]++;
@@ -194,15 +251,21 @@ int main(int argc, const char * argv[]) {
 				a = next_hop;
 			}
 			
-						cout << ",  " << hop << "Hop" << endl;
-			hop_num_pd[start] += hop;
+			cout << ",  " << hop << "Hop" << endl;
+			
+			/* Greedyで到達不能であれば平均ホップ数にはカウントしない */
+			if (1) {
+				hop_num_pd[start] += hop;
+			}
+			
 			
 			/* 到達出来なかった場合 */
 			if (a != end) {
 				unreachable_pd[start]++;
 			}
 		}
-				cout << endl;
+		
+		cout << endl;
 	}
 	
 	/* Hop数を出力 */
@@ -216,20 +279,7 @@ int main(int argc, const char * argv[]) {
 	}
 	cout << "Total : " << total_hop << endl;
 	cout << endl;
-	
-	
-	//	//Test用ここから
-	//	/* Hop数を降順にソート */
-	//	sort(pass_num_pd, pass_num_pd+node.size(), greater<int>());
-	//
-	//	for (int i = 0; i < node.size(); i++) {
-	//		cout << i << " ";
-	//		cout << pass_num_pd[i] << endl;
-	//	}
-	//	cout << endl;
-	//	//ここまで
-	
-	
+
 	
 	
 	
@@ -248,10 +298,10 @@ int main(int argc, const char * argv[]) {
 			int flag = false;
 			
 			/* 送受信ノードの記載 */
-			cout << start << " -> " << end << ",  ";
+//			cout << start << " -> " << end << ",  ";
 			
 			/* 経路の計算 */
-			cout << start;
+//			cout << start;
 			int a = start;
 			int hop = 0;
 			
@@ -269,7 +319,7 @@ int main(int argc, const char * argv[]) {
 				
 				/* 到達不能な場合は打ち切り */
 				if (flag) {
-					cout << "-X";
+//					cout << "-X";
 					break;
 				}
 				
@@ -291,7 +341,7 @@ int main(int argc, const char * argv[]) {
 				}
 				
 				/* メッセージの送信 */
-				cout << "-" << next_hop;
+//				cout << "-" << next_hop;
 				
 				/* 通過回数とホップ数をカウント */
 				pass_num_greedy[next_hop]++;
@@ -300,13 +350,13 @@ int main(int argc, const char * argv[]) {
 				a = next_hop;
 			}
 			
-			cout << ",  " << hop << "Hop" << endl;
+//			cout << ",  " << hop << "Hop" << endl;
 			hop_num_greedy[start] += hop;
 		}
 		
-		cout << endl;
+//		cout << endl;
 	}
-	cout << endl;
+//	cout << endl;
 	
 	/* Hop数を出力 */
 	total_hop = 0;
@@ -319,16 +369,6 @@ int main(int argc, const char * argv[]) {
 	}
 	cout << "Total : " << total_hop << endl;
 	cout << endl;
-	
-	//	//Test用ここから
-	//	/* Hop数を降順にソート */
-	//	sort(pass_num_greedy, pass_num_greedy+node.size(), greater<int>());
-	//	for (int i = 0; i < node.size(); i++) {
-	//		cout << i << " ";
-	//		cout << pass_num_greedy[i] << endl;
-	//	}
-	//	cout << endl;
-	//	//ここまで
 	
 	
 	
@@ -350,8 +390,8 @@ int main(int argc, const char * argv[]) {
 			int hop = 0;
 			
 			/* 送受信ノードの記載 */
-			cout << start << " -> " << end << ",  ";
-			cout << start;
+//			cout << start << " -> " << end << ",  ";
+//			cout << start;
 			
 			while (a != end) {
 				next_hop = -1;
@@ -389,12 +429,12 @@ int main(int argc, const char * argv[]) {
 				/* 送信出来るノードが無ければ到達不能扱い */
 				if (next_hop == -1) {
 					unreachable_greedy2[a]++;
-					cout << "-X";
+//					cout << "-X";
 					break;
 				}
 				
 				/* メッセージの送信 */
-				cout << "-" << next_hop;
+//				cout << "-" << next_hop;
 				
 				/* 送信済み近隣ノードの追加 */
 				node[a].neighbors_used.push_back(next_hop);
@@ -406,7 +446,7 @@ int main(int argc, const char * argv[]) {
 				a = next_hop;
 			}
 			
-			cout << ",  " << hop << "Hop" << endl;
+//			cout << ",  " << hop << "Hop" << endl;
 			hop_num_greedy2[start] += hop;
 			
 			/* 中継点となった全てのノードの送信済みノードを初期化 */
@@ -414,9 +454,9 @@ int main(int argc, const char * argv[]) {
 				node[trace[i]].neighbors_used.clear();
 			}
 		}
-		cout << endl;
+//		cout << endl;
 	}
-	cout << endl;
+//	cout << endl;
 	
 	
 	/* Hop数を出力 */
@@ -445,13 +485,14 @@ int main(int argc, const char * argv[]) {
 	cout << "Greedy : " << total_unreachable_greedy << endl;
 	cout << "Greedy2 : " << total_unreachable_greedy2 << endl;
 	
-	/* Greedyの不到達経路 */
-	cout << "Miss Hit" << endl;
-	for (int i = 0;  i < node.size(); i++) {
-		for (int j = 0; j < miss_hit[i].size(); j++) {
-			cout << i << " -> " << miss_hit[i][j] <<endl;
-		}
-	}
+//	/* Greedyの不到達経路 */
+//	cout << endl;
+//	cout << "Miss Hit Route" << endl;
+//	for (int i = 0;  i < node.size(); i++) {
+//		for (int j = 0; j < miss_hit[i].size(); j++) {
+//			cout << i << " -> " << miss_hit[i][j] <<endl;
+//		}
+//	}
 	
 	
 	
@@ -548,6 +589,43 @@ int main(int argc, const char * argv[]) {
 	//	cout << endl;
 	
 	
+	/* デバッグ用(各ノードのRTが持つ宛先を出力) */
+	cout << "Routing Table" << endl;
+	for (int i = 0; i < node.size(); i++) {
+		cout << "Node[" << i << "]" << endl;
+		for (int j = 0; j < node[i].rt.table.size(); j++) {
+			/* Policy */
+			for (int p : node[i].rt.table[j].policy) {
+				cout << p << "/";
+			}
+			cout << " : ";
+			
+			/* Address */
+			if (!node[i].rt.table[j].address.empty()) {
+				for (int z : node[i].rt.table[j].address) {
+					cout << z << "/";
+				}
+				cout << " : ";
+			} else {
+				cout << "EMPTY : ";
+			}
+			
+			/* Hop Num */
+			if (node[i].rt.table[j].hop_num != 10000) {
+				cout << node[i].rt.table[j].hop_num << " : ";
+			} else {
+				cout << "INFINITY : ";
+			}
+			
+			/* Next Hop */
+			if (node[i].rt.table[j].next_hop != -1) {
+				cout << "Node[" << node[i].rt.table[j].next_hop << "]" << endl;
+			} else {
+				cout << "NOT EXIST" << endl;
+			}
+		}
+		cout << endl;
+	}
 	
 	
 	
